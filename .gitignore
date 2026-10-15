@@ -1,0 +1,14 @@
+# Virtual Environment
+venv/
+env/
+
+# Secret Environment Variables (Your GitHub Token!)
+.env
+
+# Python Cache Files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local SQLite Database (Optional: keeps test data off GitHub)
+db.sqlite3
