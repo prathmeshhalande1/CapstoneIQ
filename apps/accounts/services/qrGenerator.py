@@ -4,15 +4,23 @@ import base64
 
 def generate_group_qr(request,group_code):
 
-    hostPort = request.get_host()
-    scheme=request.scheme
+    protocol = 'https' if request.is_secure() else 'http'
+    host = request.get_host()
+    joinUrl = f"{protocol}://{host}/accounts/join/{group_code}/"
 
-    join_url = f"{scheme}://{hostPort}/accounts/join/{group_code}"
-    
-    img = qrcode.make(join_url)
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_M,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(joinUrl)
+    qr.make(fit=True)
+
+    img = qr.make_image(fill_color="black", back_color="white")
+
     buffer = io.BytesIO()
     img.save(buffer, format="PNG")
-    buffer.seek(0)
-    
-    qr_base64 = base64.b64encode(buffer.getvalue()).decode()
-    return f"data:image/png;base64,{qr_base64}"
+    qrBase64 = base64.b64encode(buffer.getvalue()).decode()
+
+    return qrBase64, joinUrl

@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up - CapstoneIQ</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+    <div class="">
+        <h2>Create Account</h2>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="">
+                <label>Username</label>
+                <input type="text" name="username" required>
+            </div>
+            <div class="">
+                <label>Email Address</label>
+                <input type="email" name="email" required>
+            </div>
+            <div class="">
+                <label>Password</label>
+                <input type="password" name="password" required>
+            </div>
+            <div class="">
+                <label>Confirm Password</label>
+                <input type="password" name="confirm_password" required>
+            </div>
+            <button type="submit" class="">Register</button>
+        </form>
+        
+        <div class="">
+            Already have an account? <a href="{% url 'login' %}">login in</a>
+        </div>
+    </div>
+
+</body>
+</html>
