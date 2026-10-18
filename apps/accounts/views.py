@@ -47,5 +47,10 @@ def loginView(request):
             
     return render(request, 'accounts/login.html')
 def doneView(req):
-    return render('account/test.html')
-
+    return render(req,'accounts/test.html')
+def homeView(req):
+    return render(req,'accounts/index.html')
+def chatView(req):
+    return render(req,'accounts/index.html')
+def profileView(req):
+    return render(req,'accounts/index.html')

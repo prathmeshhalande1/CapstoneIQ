@@ -1,0 +1,62 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css'%}">
+    <link rel="stylesheet" href="{% static 'css/nav.css'%}">
+    <title>index page</title>
+</head>
+
+<body style="background-color: black;">
+    {% include 'components/navbar.html' %}
+    <main class="afterNavPadding">
+
+        <div class="findBar mb-4">
+            <input type="text" class="form-control" placeholder="Search group or self project details...">
+        </div>
+
+        <div class="row g-4 p-5">
+            <div class="col-md-6">
+                <div class="card glass p-4">
+                    <h3>Group Project Details</h3>
+                    <hr>
+                    {% if user_group %}
+                    <p><strong>Group Name:</strong> {{ user_group.name }}</p>
+                    <p><strong>Project Title:</strong> {{ user_group.project_title }}</p>
+                    {% else %}
+                    <p class="text-muted">You haven't created or joined a group yet.</p>
+                    <a href="{% url 'createGroup' %}" class="btn btn-primary btn-sm">Create Group Now</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card glass p-4 ">
+                    <h3>create Self Project</h3>
+                    <hr>
+                    <p><strong>Student:</strong> {{ request.user.username }}</p>
+                    <p><strong>Role:</strong> Contributor</p>
+                </div>
+            </div>
+
+        </div>
+        <div class="group">
+
+        </div>
+        <div class="personal">
+            <div class="alert alert-success">
+                {% if request.user.is_authenticated %}
+                ✅ <strong>Logged in as:</strong> {{ request.user.username }} (Session is working!)
+                {% else %}
+                ❌ <strong>Not logged in.</strong> <a href="{% url 'login' %}">Log in here</a>
+                {% endif %}
+            </div>
+
+        </div>
+    </main>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+</body>
+
+</html>
