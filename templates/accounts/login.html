@@ -21,7 +21,7 @@
         {% endfor %}
         {% endif %}
 
-        <form method="POST">
+        <form method="POST" action="{% url 'login' %}">
             {% csrf_token %}
             <div class="">
                 <label>Username</label>
@@ -31,7 +31,7 @@
                 <label>Password</label>
                 <input type="password" name="password" required>
             </div>
-            <button type="submit" class="">Sign In</button>
+            <button type="submit" class="">logIn</button>
         </form>
 
         <div class="">
@@ -40,4 +40,5 @@
     </div>
 
 </body>
+
 </html>
