@@ -9,7 +9,7 @@ import random
 import uuid
 
 # mycreated models & services
-from .models import projectGroup, studentProfile, UserOTP
+from .models import projectGroup, studentProfile,Project, UserOTP
 from .services.qrGenerator import generate_group_qr
 
 def signupView(request):
@@ -34,7 +34,6 @@ def signupView(request):
         user.is_active = False
         user.save()
 
-        # Generate and save 6-digit OTP
         otpCode = str(random.randint(100000, 999999))
         UserOTP.objects.create(user=user, otp=otpCode)
 
@@ -93,8 +92,59 @@ def loginView(request):
 def logoutView(req):
     logout(req)
     return render(req, 'accounts/index.html')
-def doneView(req):
-    return render(req, 'accounts/test.html')
+
+def homeview(request):
+  all_groups = projectGroup.objects.all()
+
+  profile, created = studentProfile.objects.get_or_create(
+      user=request.user, defaults={'rollNumber': 'PENDING'}
+  )
+  user_projects = profile.projects.all()
+  context = {
+      'user_groups': all_groups,
+      'user_profile': profile,
+      'user_projects': user_projects,
+  }
+  return render(request, 'accounts/index.html', context)
+
+def create_group_view(request):
+  if request.method == 'POST':
+    group_name = request.POST.get('group_name')
+    if group_name:
+      projectGroup.objects.create(groupName=group_name, createdBy=request.user)
+  return redirect('home')
+
+def join_group_view(request):
+  if request.method == 'POST':
+    invite_code = request.POST.get('invite_code').strip().upper()
+    group = get_object_or_404(projectGroup, groupCode=invite_code)
+    profile, _ = studentProfile.objects.get_or_create(user=request.user)
+    profile.group = group
+    profile.save()
+  return redirect('home')
+
+def save_repository_view(request):
+  if request.method == 'POST':
+    group_name = request.POST.get('group_name')
+    project_title = request.POST.get('project_title')
+    repository_url = request.POST.get('repository_url')
+    group = get_object_or_404(projectGroup, groupName=group_name)
+    profile, _ = studentProfile.objects.get_or_create(
+        user=request.user, defaults={'group': group}
+    )
+    profile.group = group
+    profile.githubUrl = repository_url
+    profile.save()
+    Project.objects.update_or_create(
+        student=profile,
+        defaults={'title': project_title, 'projetUrl': repository_url},
+    )
+  return redirect('home')
+
+def CreateProjectView(req):
+    return render(req, 'accounts/createProject.html')
+def addProjectView(req):
+    return render(req, 'accounts/selfProjectinit.html')
 def homeView(req):
     return render(req, 'accounts/index.html')
 def chatView(req):

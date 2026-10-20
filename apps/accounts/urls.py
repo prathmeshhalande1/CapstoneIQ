@@ -5,8 +5,8 @@ urlpatterns = [
     path('verifyOtp/', views.verifyOTPView, name='otpVerify'),
     path('login/', views.loginView, name='login'),
     path('logout/', views.logoutView, name='logout'),
-    path('chat/', views.chatView, name='chat'),                  # Group Chat
-    path('profile/', views.profileView, name='profile'),
-    path('createGroup/', views.homeView, name='createGroup'),
+    path('group/create/', views.create_group_view, name='create_group'),
+    path('group/join/', views.join_group_view, name='join_group'),
+    path('repository/save/', views.save_repository_view, name='save_repository'),
     path('',views.homeView,name='home'),
 ]

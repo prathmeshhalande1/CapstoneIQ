@@ -1,0 +1,50 @@
+        .appContainer {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        .navRail {
+            width: 68px;
+            background: rgba(0, 0, 0, 0.6);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+            gap: 18px;
+            flex-shrink: 0;
+        }
+
+        .navIconBtn {
+            background: none;
+            border: none;
+            color: #9ca3af;
+            font-size: 1.35rem;
+            padding: 10px 12px;
+            border-radius: 12px;
+            transition: all 0.2s;
+        }
+
+        .navIconBtn:hover,
+        .navIconBtn.active {
+            background: rgba(13, 110, 253, 0.25);
+            color: #ffffff;
+        }
+
+        .groupSidebar {
+            width: 330px;
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            flex-direction: column;
+            background: rgba(15, 15, 22, 0.75);
+            flex-shrink: 0;
+        }
+        
+        .groupItem {
+            padding: 12px 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            cursor: pointer; transition: background 0.2s;
+        }
+        .groupItem:hover, .groupItem.active {
+            background: rgba(13, 110, 253, 0.14); border-left: 3px solid #0d6efd;
+        }

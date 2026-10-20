@@ -1,0 +1,24 @@
+<div id="profileView" class="workspace p-5 d-none">
+<div class="modal fade" id="createGroupModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content glass border-secondary">
+            <div class="modal-header border-secondary border-opacity-25">
+                <h5 class="modal-title fw-bold">+ Create Project Group</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{% url 'create_group' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Group Name</label>
+                        <input type="text" name="group_name" class="form-control form-control-dark" placeholder="Enter group or batch name..." required>
+                    </div>
+                </div>
+                <div class="modal-footer border-secondary border-opacity-25">
+                    <button type="submit" class="btn btn-primary w-100 fw-semibold">Create & Generate Invite Code</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</div>

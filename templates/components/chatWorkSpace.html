@@ -1,0 +1,75 @@
+<div id="chatView" class="d-flex flex-grow-1" style="min-width: 0;">
+    <div class="groupSidebar">
+        <div class="p-3 border-bottom border-secondary border-opacity-25">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h6 class="fw-bold m-0">Groups <span class="badge bg-secondary bg-opacity-50"
+                        id="visible-group-count">{{ user_groups.count }}</span></h6>
+                <div class="d-flex gap-1">
+                    <button class="btn btn-sm btn-outline-info py-1 px-2" data-bs-toggle="modal"
+                        data-bs-target="#joinGroupModal">🔑 Join</button>
+                    <button class="btn btn-sm btn-primary py-1 px-2" data-bs-toggle="modal"
+                        data-bs-target="#createGroupModal">+ Create</button>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2 mb-2">
+                <input type="text" id="groupSearchInput" class="form-control form-control-sm form-control-dark"
+                    placeholder="Search groups..." onkeyup="applyGroupFilters()">
+                <select id="groupSortSelect" class="form-select form-select-sm form-control-dark" style="width: 110px;"
+                    onchange="applyGroupFilters()">
+                    <option value="default">Sort: All</option>
+                    <option value="name-asc">A - Z</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="overflow-auto flex-grow-1" id="groupList">
+            {% for group in user_groups %}
+            <div class="group-item {% if forloop.first %}active{% endif %}" data-name="{{ group.name }}"
+                data-size="{{ group.members.count }}"
+                onclick="selectGroup('{{ group.name }}', '{{ group.category_badge }}', '{{ group.members.count }}', '{{ group.invite_code }}', this)">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <h6 class="fw-bold mb-0 text-truncate">{{ group.name }}</h6>
+                    <span class="badge bg-primary bg-opacity-25 text-info">{{ group.category_badge }}</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-secondary">{{ group.repositories.count }} Repos Active</small>
+                    <small class="text-light badge bg-secondary bg-opacity-25">👥 {{ group.members.count }}</small>
+                </div>
+            </div>
+            {% empty %}
+            <div class="p-3 text-center text-muted">
+                <small>No groups found. Create one or join using an invite code!</small>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+
+
+<div class="modal fade" id="createGroupModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content glass border-secondary">
+            <div class="modal-header border-secondary border-opacity-25">
+                <h5 class="modal-title fw-bold">+ Create Project Group</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{% url 'create_group' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Group Name</label>
+                        <input type="text" name="group_name" class="form-control form-control-dark"
+                            placeholder="Enter group or batch name..." required>
+                    </div>
+                </div>
+                <div class="modal-footer border-secondary border-opacity-25">
+                    <button type="submit" class="btn btn-primary w-100 fw-semibold">Create & Generate Invite
+                        Code</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
