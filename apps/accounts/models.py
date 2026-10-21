@@ -9,7 +9,12 @@ class projectGroup(models.Model):
     groupName = models.CharField(max_length=200)
     createdBy = models.ForeignKey(User,on_delete=models.CASCADE)
     createdAt = models.DateTimeField(auto_now_add=True)
-
+    category_badge = category_badge = models.CharField(
+      max_length=50, default="Academic Batch"
+  )
+    members = models.ManyToManyField(
+      User, related_name="project_groups", blank=True
+  )
     def save(self, *args, **kwargs):
         if not self.groupCode:
          self.groupCode = (
@@ -19,7 +24,7 @@ class projectGroup(models.Model):
           )
         super().save(*args, **kwargs)
     def __str__(self):
-        return f"{self.groupName} ({self.groupCode})"
+        return f"{self.groupName} ({self.groupCode}) ({self.createdAt})"
 
 class studentProfile(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE)
@@ -28,7 +33,7 @@ class studentProfile(models.Model):
     group = models.ForeignKey(projectGroup,on_delete=models.SET_NULL,null=True,related_name='students')
 
     def __str__(self):
-        return f"{self.user.get_full_name()} - {self.roll_number}"
+        return f"{self.user.get_full_name()} - {self.rollNumber}"
 
 class StudentRepository(models.Model):
   student = models.ForeignKey( User, on_delete=models.CASCADE, related_name="repositories")

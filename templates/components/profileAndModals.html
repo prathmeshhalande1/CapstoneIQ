@@ -1,4 +1,32 @@
 <div id="profileView" class="workspace p-5 d-none">
+    
+</div>
+<div class="modal fade" id="joinGroupModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content glass border-secondary">
+            <div class="modal-header border-secondary border-opacity-25">
+                <h5 class="modal-title fw-bold">🔑 Join an Existing Group</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{% url 'join_group' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <p class="text-secondary small">Enter the Group Invite Code shared by your teacher or project
+                        leader.</p>
+                    <div class="mb-3">
+                        <label class="form-label">Group Invite Code</label>
+                        <input type="text" name="invite_code"
+                            class="form-control form-control-dark text-uppercase fw-bold" placeholder="e.g., ABCD-1234"
+                            required>
+                    </div>
+                </div>
+                <div class="modal-footer border-secondary border-opacity-25">
+                    <button type="submit" class="btn btn-info w-100 fw-semibold">Join Group Now</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <div class="modal fade" id="createGroupModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content glass border-secondary">
@@ -11,14 +39,50 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label">Group Name</label>
-                        <input type="text" name="group_name" class="form-control form-control-dark" placeholder="Enter group or batch name..." required>
+                        <input type="text" name="group_name" class="form-control form-control-dark"
+                            placeholder="Enter group or batch name..." required>
                     </div>
                 </div>
                 <div class="modal-footer border-secondary border-opacity-25">
-                    <button type="submit" class="btn btn-primary w-100 fw-semibold">Create & Generate Invite Code</button>
+                    <button type="submit" class="btn btn-primary w-100 fw-semibold">Create & Generate Invite
+                        Code</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+<div class="modal fade" id="manageRepoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content glass border-secondary">
+            <div class="modal-header border-secondary border-opacity-25">
+                <h5 class="modal-title fw-bold">🔗 Link or Update Repository</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{% url 'save_repository' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-2">
+                        <span class="badge bg-primary" id="repoModalGroupName">Current Group</span>
+                        <input type="hidden" name="group_name" id="hiddenGroupNameField">
+                    </div>
+                    <p class="text-secondary small">Paste your corrected GitHub repository URL below to link or replace
+                        your entry.</p>
+
+                    <div class="mb-3">
+                        <label class="form-label">Project Title</label>
+                        <input type="text" id="repoTitleInput" name="project_title"
+                            class="form-control form-control-dark" placeholder="e.g., Telemetry Pipeline" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">GitHub Repository URL</label>
+                        <input type="url" id="repoUrlInput" name="repository_url" class="form-control form-control-dark"
+                            placeholder="https://github.com/username/repo" required>
+                    </div>
+                </div>
+                <div class="modal-footer border-secondary border-opacity-25">
+                    <button type="submit" class="btn btn-success w-100 fw-semibold">Save / Update Repository</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>

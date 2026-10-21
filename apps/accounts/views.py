@@ -95,7 +95,6 @@ def logoutView(req):
 
 def homeview(request):
   all_groups = projectGroup.objects.all()
-
   profile, created = studentProfile.objects.get_or_create(
       user=request.user, defaults={'rollNumber': 'PENDING'}
   )
@@ -111,16 +110,14 @@ def create_group_view(request):
   if request.method == 'POST':
     group_name = request.POST.get('group_name')
     if group_name:
-      projectGroup.objects.create(groupName=group_name, createdBy=request.user)
+      projectGroup.objects.create(groupName=group_name, category_badge='Custom Squad',createdBy=request.user)
   return redirect('home')
 
 def join_group_view(request):
   if request.method == 'POST':
     invite_code = request.POST.get('invite_code').strip().upper()
     group = get_object_or_404(projectGroup, groupCode=invite_code)
-    profile, _ = studentProfile.objects.get_or_create(user=request.user)
-    profile.group = group
-    profile.save()
+    group.members.add(request.user)
   return redirect('home')
 
 def save_repository_view(request):
