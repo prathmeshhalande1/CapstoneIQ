@@ -2,14 +2,15 @@ from django.db import models
 from django.contrib.auth.models import User
 import random
 import string
-# Create your models here.
+
 class projectGroup(models.Model):
     
     groupCode = models.CharField(max_length=20,unique=True)
     groupName = models.CharField(max_length=200)
     createdBy = models.ForeignKey(User,on_delete=models.CASCADE)
     createdAt = models.DateTimeField(auto_now_add=True)
-    category_badge = category_badge = models.CharField(
+
+    category_badge = models.CharField(
       max_length=50, default="Academic Batch"
   )
     members = models.ManyToManyField(
@@ -24,17 +25,29 @@ class projectGroup(models.Model):
           )
         super().save(*args, **kwargs)
     def __str__(self):
-        return f"{self.groupName} ({self.groupCode}) ({self.createdAt})"
+        return f"{self.groupName} ({self.groupCode})"
 
-class studentProfile(models.Model):
-    user = models.OneToOneField(User,on_delete=models.CASCADE)
-    rollNumber = models.CharField(max_length=20)
-    githubUrl = models.URLField()
-    group = models.ForeignKey(projectGroup,on_delete=models.SET_NULL,null=True,related_name='students')
-
+class userProfile(models.Model):
+    user = models.OneToOneField(User,on_delete=models.CASCADE,related_name="profile")
+    rollNumber = models.CharField(max_length=20,blank=True,null=True)
     def __str__(self):
         return f"{self.user.get_full_name()} - {self.rollNumber}"
+    
+class GroupMembership(models.Model):
+  student = models.ForeignKey(
+      userProfile, on_delete=models.CASCADE, related_name='memberships'
+  )
+  group = models.ForeignKey(
+      projectGroup, on_delete=models.CASCADE, related_name='group_members'
+  )
+  joined_at = models.DateTimeField(auto_now_add=True)
 
+  class Meta:
+    unique_together = ('student', 'group')
+
+  def __str__(self):
+    return f"{self.student.user.username} in {self.group.groupName}"
+  
 class StudentRepository(models.Model):
   student = models.ForeignKey( User, on_delete=models.CASCADE, related_name="repositories")
   group = models.ForeignKey(projectGroup, on_delete=models.CASCADE, related_name="repositories")
@@ -47,7 +60,14 @@ class StudentRepository(models.Model):
     return f"{self.student.username} - {self.project_title}"
     
 class Project(models.Model):
-    student = models.ForeignKey(studentProfile, on_delete=models.CASCADE, related_name='projects')
+    student = models.ForeignKey(userProfile, on_delete=models.CASCADE, related_name='projects')
+    group = models.ForeignKey(
+      projectGroup,
+      on_delete=models.SET_NULL,
+      null=True,
+      blank=True,
+      related_name='group_projects',
+  )
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True)
     projetUrl = models.URLField(max_length=500, blank=True, null=True)

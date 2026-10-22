@@ -1,9 +1,9 @@
 from django.db import models
-from apps.accounts.models import studentProfile
+from apps.accounts.models import userProfile
 # Create your models here.
 
 class commitLog(models.Model):
-    student = models.ForeignKey(studentProfile,on_delete=models.CASCADE,related_name="commit")
+    student = models.ForeignKey(userProfile,on_delete=models.CASCADE,related_name="commit")
     commitSha = models.CharField(max_length=40,unique=True)
     commitdata = models.DateField()
     autherName =models.CharField(max_length=100)

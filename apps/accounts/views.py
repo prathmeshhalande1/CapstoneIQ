@@ -5,11 +5,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
+from django.db.models import Q
 import random
 import uuid
 
 # mycreated models & services
-from .models import projectGroup, studentProfile,Project, UserOTP
+from .models import projectGroup, userProfile,Project, UserOTP ,GroupMembership
 from .services.qrGenerator import generate_group_qr
 
 def signupView(request):
@@ -93,57 +94,63 @@ def logoutView(req):
     logout(req)
     return render(req, 'accounts/index.html')
 
-def homeview(request):
-  all_groups = projectGroup.objects.all()
-  profile, created = studentProfile.objects.get_or_create(
-      user=request.user, defaults={'rollNumber': 'PENDING'}
-  )
-  user_projects = profile.projects.all()
-  context = {
-      'user_groups': all_groups,
-      'user_profile': profile,
-      'user_projects': user_projects,
-  }
-  return render(request, 'accounts/index.html', context)
+@login_required
+def homeView(request):
+    profile, _ = userProfile.objects.get_or_create(user=request.user)
+    user_groups = projectGroup.objects.filter(
+        Q(createdBy=request.user) | Q(group_members__student=profile)
+    ).distinct()
+    user_projects = profile.projects.all()
 
+    context = {
+        'user_groups': user_groups,
+        'user_profile': profile,
+        'user_projects': user_projects,
+    }
+    return render(request, 'accounts/index.html', context)
+
+@login_required
 def create_group_view(request):
   if request.method == 'POST':
     group_name = request.POST.get('group_name')
     if group_name:
-      projectGroup.objects.create(groupName=group_name, category_badge='Custom Squad',createdBy=request.user)
+        group = projectGroup.objects.create(groupName=group_name, createdBy=request.user)
+        profile, _ = userProfile.objects.get_or_create(user=request.user)
+        GroupMembership.objects.get_or_create(student=profile, group=group)
   return redirect('home')
 
+@login_required
 def join_group_view(request):
   if request.method == 'POST':
-    invite_code = request.POST.get('invite_code').strip().upper()
-    group = get_object_or_404(projectGroup, groupCode=invite_code)
-    group.members.add(request.user)
+    invite_code = request.POST.get('invite_code', '').strip().upper()
+    if invite_code:
+      group = get_object_or_404(projectGroup, groupCode=invite_code)
+      profile, _ = userProfile.objects.get_or_create(user=request.user)
+      GroupMembership.objects.get_or_create(student=profile, group=group)
   return redirect('home')
 
+@login_required
 def save_repository_view(request):
   if request.method == 'POST':
     group_name = request.POST.get('group_name')
     project_title = request.POST.get('project_title')
     repository_url = request.POST.get('repository_url')
     group = get_object_or_404(projectGroup, groupName=group_name)
-    profile, _ = studentProfile.objects.get_or_create(
-        user=request.user, defaults={'group': group}
-    )
-    profile.group = group
-    profile.githubUrl = repository_url
-    profile.save()
-    Project.objects.update_or_create(
-        student=profile,
-        defaults={'title': project_title, 'projetUrl': repository_url},
-    )
+    profile, _ = userProfile.objects.get_or_create(user=request.user)
+    GroupMembership.objects.get_or_create(user_profile=profile, group=group)
+    Project.objects.create(
+            user_profile=profile,
+            group=group,
+            title=project_title,
+            projetUrl=repository_url
+        )
   return redirect('home')
 
 def CreateProjectView(req):
     return render(req, 'accounts/createProject.html')
 def addProjectView(req):
     return render(req, 'accounts/selfProjectinit.html')
-def homeView(req):
-    return render(req, 'accounts/index.html')
+
 def chatView(req):
     return render(req, 'accounts/index.html')
 def profileView(req):
