@@ -11,7 +11,6 @@ import uuid
 
 # mycreated models & services
 from .models import projectGroup, userProfile,Project, UserOTP ,GroupMembership
-from .services.qrGenerator import generate_group_qr
 
 def signupView(request):
     if request.method == 'POST':
@@ -99,7 +98,19 @@ def homeView(request):
     profile, _ = userProfile.objects.get_or_create(user=request.user)
     user_groups = projectGroup.objects.filter(
         Q(createdBy=request.user) | Q(group_members__student=profile)
+    ).select_related('createdBy').prefetch_related(
+        'group_members__student__user'
     ).distinct()
+    for group in user_groups:
+        participants = [group.createdBy]
+        participants.extend(
+            membership.student.user
+            for membership in group.group_members.all()
+            if membership.student.user_id != group.createdBy_id
+        )
+        group.chat_participants = participants
+        group.participant_count = len(participants)
+
     user_projects = profile.projects.all()
 
     context = {
@@ -146,6 +157,66 @@ def save_repository_view(request):
         )
   return redirect('home')
 
+
+def forgot_password_view(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        try:
+            user = User.objects.get(email=email)
+            otp = random.randint(100000, 999999)
+            
+            # Store OTP and email in session
+            request.session['reset_otp'] = str(otp)
+            request.session['reset_email'] = email
+
+            # Send OTP email
+            send_mail(
+                subject='Your CapstoneIQ Password Reset OTP',
+                message=f'Your OTP code is {otp}. It is valid for 10 minutes.',
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[email],
+            )
+            messages.success(request, 'OTP has been sent to your email.')
+            return redirect('verifyAccountOtp')
+        except User.DoesNotExist:
+            messages.error(request, 'No account found with this email address.')
+            
+    return render(request, 'accounts/forgetPassword.html')
+
+
+def verify_otp_view(request):
+    if request.method == 'POST':
+        otp_input = request.POST.get('otp')
+        new_password = request.POST.get('new_password')
+        confirm_password = request.POST.get('confirm_password')
+
+        session_otp = request.session.get('reset_otp')
+        email = request.session.get('reset_email')
+
+        if not session_otp or not email:
+            messages.error(request, 'Session expired. Please request OTP again.')
+            return redirect('forgotPassword')
+
+        if otp_input != session_otp:
+            messages.error(request, 'Invalid OTP code.')
+            return render(request, 'accounts/verifyAccountOtp.htmll')
+
+        if new_password != confirm_password:
+            messages.error(request, 'Passwords do not match.')
+            return render(request, 'accounts/verifyAccountOtp.html')
+
+        user = User.objects.get(email=email)
+        user.set_password(new_password)
+        user.save()
+
+        del request.session['reset_otp']
+        del request.session['reset_email']
+
+        messages.success(request, 'Password reset successful! Please log in.')
+        return redirect('login')
+
+    return render(request, 'accounts/verifyAccountOtp.html')
+
 def CreateProjectView(req):
     return render(req, 'accounts/createProject.html')
 def addProjectView(req):
@@ -155,3 +226,4 @@ def chatView(req):
     return render(req, 'accounts/index.html')
 def profileView(req):
     return render(req, 'accounts/index.html')
+

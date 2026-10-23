@@ -21,6 +21,7 @@
                 {% for message in messages %}
                 <div class="">
                     {{ message }}
+                    Don't have an account? <a href="{% url 'forgotPassword' %}">forgot password</a>
                 </div>
                 {% endfor %}
                 {% endif %}

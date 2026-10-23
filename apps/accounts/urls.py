@@ -9,4 +9,6 @@ urlpatterns = [
     path('group/join/', views.join_group_view, name='join_group'),
     path('repository/save/', views.save_repository_view, name='save_repository'),
     path('',views.homeView,name='home'),
+    path('forgot-password/', views.forgot_password_view, name='forgotPassword'),
+    path('verify-otp/', views.verify_otp_view, name='verifyAccountOtp'),
 ]

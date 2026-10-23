@@ -27,15 +27,28 @@
         <div class="overflow-auto flex-grow-1" id="groupList">
             {% for group in user_groups %}
             <div class="group-item {% if forloop.first %}active{% endif %}" data-name="{{ group.groupName }}"
-                data-size="{{ group.group_members.count }}"
-                onclick="selectGroup('{{ group.groupName }}', '{{ group.category_badge }}', '{{ group.group_members.count }}', '{{ group.groupCode }}', this)">
+                data-size="{{ group.participant_count }}"
+                onclick="selectGroup('{{ group.groupName }}', '{{ group.category_badge }}', '{{ group.participant_count }}', '{{ group.groupCode }}', this)">
                 <div class="d-flex justify-content-between align-items-center mb-1">
                     <h6 class="fw-bold mb-0 text-truncate">{{ group.groupName }}</h6>
                     <span class="badge bg-primary bg-opacity-25 text-info">{{ group.category_badge }}</span>
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
                     <small class="text-secondary">{{ group.repositories.count }} Repos Active</small>
-                    <small class="text-light badge bg-secondary bg-opacity-25">👥 {{ group.group_members.count }}</small>
+                    <small class="text-light badge bg-secondary bg-opacity-25">👥 {{ group.participant_count }}</small>
+                </div>
+                <div class="mt-2">
+                    <small class="text-secondary d-block mb-1">People</small>
+                    <ul class="list-unstyled mb-0 small">
+                        {% for participant in group.chat_participants %}
+                        <li class="text-light text-truncate">
+                            {{ participant.get_full_name|default:participant.username }}
+                            {% if participant.pk == group.createdBy_id %}
+                            <span class="text-info">(Creator)</span>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
                 </div>
             </div>
             {% empty %}

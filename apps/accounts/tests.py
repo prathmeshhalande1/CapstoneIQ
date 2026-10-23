@@ -44,4 +44,28 @@ class ProjectGroupChatTests(TestCase):
 
         response = self.client.get(reverse('home'))
         self.assertContains(response, 'Joined Group')
-        self.assertContains(response, '👥 1')
+        self.assertContains(response, '👥 2')
+
+    def test_sidebar_shows_creator_and_all_group_members(self):
+        owner = User.objects.create_user(
+            username='group-owner',
+            first_name='Group',
+            last_name='Owner',
+            password='password',
+        )
+        group = projectGroup.objects.create(groupName='People Group', createdBy=owner)
+        member_users = [
+            self.user,
+            User.objects.create_user(username='member-two', password='password'),
+        ]
+        for member_user in member_users:
+            profile, _ = userProfile.objects.get_or_create(user=member_user)
+            GroupMembership.objects.create(student=profile, group=group)
+
+        response = self.client.get(reverse('home'))
+
+        self.assertContains(response, 'Group Owner')
+        self.assertContains(response, '(Creator)')
+        self.assertContains(response, 'student')
+        self.assertContains(response, 'member-two')
+        self.assertContains(response, '👥 3')
