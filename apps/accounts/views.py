@@ -97,16 +97,16 @@ def logoutView(req):
 def homeView(request):
     profile, _ = userProfile.objects.get_or_create(user=request.user)
     user_groups = projectGroup.objects.filter(
-        Q(createdBy=request.user) | Q(group_members__student=profile)
+        Q(createdBy=request.user) | Q(group_members__User=profile)
     ).select_related('createdBy').prefetch_related(
-        'group_members__student__user'
+        'group_members__User__user'
     ).distinct()
     for group in user_groups:
         participants = [group.createdBy]
         participants.extend(
-            membership.student.user
+            membership.User.user
             for membership in group.group_members.all()
-            if membership.student.user_id != group.createdBy_id
+            if membership.User.user_id != group.createdBy_id
         )
         group.chat_participants = participants
         group.participant_count = len(participants)
@@ -164,12 +164,8 @@ def forgot_password_view(request):
         try:
             user = User.objects.get(email=email)
             otp = random.randint(100000, 999999)
-            
-            # Store OTP and email in session
             request.session['reset_otp'] = str(otp)
             request.session['reset_email'] = email
-
-            # Send OTP email
             send_mail(
                 subject='Your CapstoneIQ Password Reset OTP',
                 message=f'Your OTP code is {otp}. It is valid for 10 minutes.',

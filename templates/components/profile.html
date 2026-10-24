@@ -1,0 +1,105 @@
+{% load static %}
+<div id="profileView" class="workspace w-100 flex-grow-1 d-none"
+    style="height: 100vh; overflow-y: auto; overflow-x: hidden;">
+    <div class="container-fluid py-5">
+        <div class="row justify-content-center mt-4">
+            <div class="col-12 col-md-10 col-lg-8 col-xl-6 px-4">
+
+                {% if user_profile.rollNumber %}
+                <div class="glass p-4 p-md-5" style="border-radius: 20px;">
+                    <div class="text-center mb-4">
+                        {% if user_profile.avatar %}
+                        <img src="{{ user_profile.avatar.url }}" alt="Avatar"
+                            style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.2);">
+                        {% else %}
+                        <div class="avatar-preview mx-auto glass d-flex align-items-center justify-content-center"
+                            style="width: 120px; height: 120px; border-radius: 50%; overflow: hidden;">
+                            <span style="font-size: 2rem;">👤</span>
+                        </div>
+                        {% endif %}
+                        <h3 class="mt-3 mb-1">{{ request.user.get_full_name|default:request.user.username }}</h3>
+                        <p class="text-muted mb-0">{{ user_profile.rollNumber }}</p>
+                    </div>
+                    <div class="row text-start mb-4 glass p-3" style="border-radius: 15px;">
+                        <div class="col-6 mb-3">
+                            <small class="text-muted d-block">Location</small>
+                            <strong>{{ user_profile.live|default:"Not specified" }}</strong>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <small class="text-muted d-block">Phone</small>
+                            <strong>{{ user_profile.phoneNumber|default:"Not specified" }}</strong>
+                        </div>
+                        <div class="col-6 mb-0">
+                            <small class="text-muted d-block">Birthday</small>
+                            <strong>{{ user_profile.birthDay|default:"Not specified" }}</strong>
+                        </div>
+                    </div>
+                    <hr class="my-4" style="border-color: rgba(255,255,255,0.2);">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="m-0">My Projects</h4>
+                        <button type="button" class="btn glass-btn-success btn-sm px-3" data-bs-toggle="modal"
+                            data-bs-target="#addProjectModal">
+                            ➕ Add Project
+                        </button>
+                    </div>
+                    <div class="text-start">
+                        {% for project in user_projects %}
+                        <div class="glass p-3 mb-3" style="border-radius: 10px;">
+                            <h5 class="mb-1">{{ project.title }}</h5>
+                            <p class="mb-2 text-muted small">{{ project.status }} • {{ project.build_health }}</p>
+                            {% if project.projetUrl %}
+                            <a href="{{ project.projetUrl }}" target="_blank" class="btn glass-btn btn-sm">🔗 View
+                                GitHub</a>
+                            {% endif %}
+                        </div>
+                        {% empty %}
+                        <p class="text-muted text-center py-3">No projects added yet.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% else %}
+                <div class="glass p-4 p-md-5" style="border-radius: 20px;">
+                    <h2 class="mb-4 text-center">Create Your Profile</h2>
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-4 text-center">
+                            <div class="avatar-preview mb-3 mx-auto glass d-flex align-items-center justify-content-center"
+                                style="width: 120px; height: 120px; border-radius: 50%; overflow: hidden;">
+                                <span style="font-size: 2rem;">📷</span>
+                            </div>
+                            <label for="avatar" class="btn glass-btn btn-sm px-4">Upload Avatar</label>
+                            <input type="file" id="avatar" name="avatar" class="d-none" accept="image/*">
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6 mb-3">
+                                <label for="rollNumber" class="form-label">Roll Number</label>
+                                <input type="text" class="form-control glass-input" id="rollNumber" name="rollNumber"
+                                    placeholder="e.g. CS2024-001" required>
+                            </div>
+                            <div class="col-sm-6 mb-3">
+                                <label for="phoneNumber" class="form-label">Phone Number</label>
+                                <input type="text" class="form-control glass-input" id="phoneNumber" name="phoneNumber"
+                                    placeholder="+1 234 567 8900">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6 mb-3">
+                                <label for="live" class="form-label">Location (Live)</label>
+                                <input type="text" class="form-control glass-input" id="live" name="live"
+                                    placeholder="City, Country">
+                            </div>
+                            <div class="col-sm-6 mb-4">
+                                <label for="birthDay" class="form-label">Birthday</label>
+                                <input type="date" class="form-control glass-input" id="birthDay" name="birthDay">
+                            </div>
+                        </div>
+                        <div class="d-grid gap-2 mt-2">
+                            <button type="submit" class="btn glass-btn-primary py-2 fs-5">Save Profile</button>
+                        </div>
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
