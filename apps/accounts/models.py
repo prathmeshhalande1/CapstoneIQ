@@ -10,6 +10,7 @@ class userProfile(models.Model):
     phoneNumber = models.CharField(max_length=14,blank=True,null=True)
     live = models.CharField(max_length=20,blank=True,null=True)
     birthDay = models.DateField(null=True,blank=True)
+    isProfileCreated = models.BooleanField(default=False)
     def __str__(self):
         return f"{self.user.get_full_name()} {self.rollNumber}"
 

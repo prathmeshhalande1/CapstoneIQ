@@ -11,4 +11,5 @@ urlpatterns = [
     path('',views.homeView,name='home'),
     path('forgot-password/', views.forgot_password_view, name='forgotPassword'),
     path('verify-otp/', views.verify_otp_view, name='verifyAccountOtp'),
+    path('createProfile/', views.createProfileview, name='createProfile'),
 ]

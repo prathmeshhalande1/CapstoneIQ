@@ -212,7 +212,31 @@ def verify_otp_view(request):
         return redirect('login')
 
     return render(request, 'accounts/verifyAccountOtp.html')
+def createProfileview(req):
+    if req.method == 'POST':
+        avatarInput = req.FILES.get('avatar')
 
+        rollNumberInput = req.POST.get('rollNumber')
+        phoneNumberInput = req.POST.get('phoneNumber')
+        liveInput = req.POST.get('live')
+        birthDayInput = req.POST.get('birthDay')
+
+        profile, _ = userProfile.objects.get_or_create(user=req.user)
+
+        if avatarInput:
+            profile.avatar = avatarInput
+
+        if birthDayInput:
+            profile.birthDay = birthDayInput
+
+        profile.rollNumber = rollNumberInput
+        profile.phoneNumber = phoneNumberInput
+        profile.live = liveInput
+        profile.isProfileCreated =True
+        profile.save()
+        return redirect('home')
+    return redirect('home')
+        
 def CreateProjectView(req):
     return render(req, 'accounts/createProject.html')
 def addProjectView(req):

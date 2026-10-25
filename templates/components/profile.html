@@ -5,7 +5,7 @@
         <div class="row justify-content-center mt-4">
             <div class="col-12 col-md-10 col-lg-8 col-xl-6 px-4">
 
-                {% if user_profile.rollNumber %}
+                {% if user_profile.isProfileCreated %}
                 <div class="glass p-4 p-md-5" style="border-radius: 20px;">
                     <div class="text-center mb-4">
                         {% if user_profile.avatar %}
@@ -22,16 +22,20 @@
                     </div>
                     <div class="row text-start mb-4 glass p-3" style="border-radius: 15px;">
                         <div class="col-6 mb-3">
-                            <small class="text-muted d-block">Location</small>
+                            <small class="text-secondary d-block">Location</small>
                             <strong>{{ user_profile.live|default:"Not specified" }}</strong>
                         </div>
                         <div class="col-6 mb-3">
-                            <small class="text-muted d-block">Phone</small>
+                            <small class="text-secondary d-block">Phone</small>
                             <strong>{{ user_profile.phoneNumber|default:"Not specified" }}</strong>
                         </div>
                         <div class="col-6 mb-0">
-                            <small class="text-muted d-block">Birthday</small>
+                            <small class="text-secondary d-block">Birthday</small>
                             <strong>{{ user_profile.birthDay|default:"Not specified" }}</strong>
+                        </div>
+                        <div class="col-6 mb-0">
+                            <small class="text-secondary d-block">user Name</small>
+                            <strong>{{ user_profile.user|default:"Not specified" }}</strong>
                         </div>
                     </div>
                     <hr class="my-4" style="border-color: rgba(255,255,255,0.2);">
@@ -60,12 +64,18 @@
                 {% else %}
                 <div class="glass p-4 p-md-5" style="border-radius: 20px;">
                     <h2 class="mb-4 text-center">Create Your Profile</h2>
-                    <form method="POST" enctype="multipart/form-data">
+                    <form method="POST" enctype="multipart/form-data" action="{% url 'createProfile' %}">
                         {% csrf_token %}
                         <div class="mb-4 text-center">
                             <div class="avatar-preview mb-3 mx-auto glass d-flex align-items-center justify-content-center"
                                 style="width: 120px; height: 120px; border-radius: 50%; overflow: hidden;">
+                                {% if user_profile.avatar %}
+                                <img src="{{ user_profile.avatar.url }}" alt="Profile Picture"
+                                    style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover;">
+                                {% else %}
                                 <span style="font-size: 2rem;">📷</span>
+                                {% endif %}
+
                             </div>
                             <label for="avatar" class="btn glass-btn btn-sm px-4">Upload Avatar</label>
                             <input type="file" id="avatar" name="avatar" class="d-none" accept="image/*">
