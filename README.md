@@ -1,3 +1,6 @@
+# ⚠️ Work in Progress (WIP)
+This project is currently under active development and is not yet fully functional. Please do not copy, fork, or use this codebase, as it is incomplete and subject to breaking changes.
+
 # 🎓 CapstoneIQ - College Capstone Management System
 
 CapstoneIQ is a modular Django-based web application built to manage student profiles, telemetry, project repositories, and collaboration groups.

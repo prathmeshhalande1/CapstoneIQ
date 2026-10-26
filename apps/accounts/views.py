@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
 from django.db.models import Q
-import random
+import random,datetime
 import uuid
 
 # mycreated models & services
@@ -244,7 +244,27 @@ def createProfileview(req):
         return redirect('home')
     return redirect('home')
 def createProjectView(req):
-    return render(req, 'accounts/createProject.html')
+    if req.method == 'POST':
+        profile = userProfile.objects.get(user=req.user)
+
+        titleInput=req.POST.get('title')
+        projetUrlInput=req.POST.get('projetUrl')
+        descriptionInput=req.POST.get('description')
+        statusInput=req.POST.get('status')
+        buildHealthInput = req.POST.get('build_health')
+
+        isPrivateInput = req.POST.get('isPrivate') == 'True'
+        
+        Project.objects.create(
+            user=profile,
+            title=titleInput,
+            projetUrl=projetUrlInput,
+            description=descriptionInput,
+            status=statusInput,
+            build_health=buildHealthInput,
+            isPrivate=isPrivateInput
+        )
+    return redirect("home")
 def CreateProjectView(req):
     return render(req, 'accounts/createProject.html')
 def addProjectView(req):
