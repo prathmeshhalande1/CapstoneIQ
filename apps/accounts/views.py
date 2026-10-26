@@ -216,10 +216,13 @@ def createProfileview(req):
     if req.method == 'POST':
         avatarInput = req.FILES.get('avatar')
 
+
         rollNumberInput = req.POST.get('rollNumber')
         phoneNumberInput = req.POST.get('phoneNumber')
         liveInput = req.POST.get('live')
         birthDayInput = req.POST.get('birthDay')
+        fname = req.POST.get('firstName')
+        lname = req.POST.get('lastName')
 
         profile, _ = userProfile.objects.get_or_create(user=req.user)
 
@@ -233,10 +236,15 @@ def createProfileview(req):
         profile.phoneNumber = phoneNumberInput
         profile.live = liveInput
         profile.isProfileCreated =True
+        req.user.first_name = fname
+        req.user.last_name = lname
+
+        req.user.save()
         profile.save()
         return redirect('home')
     return redirect('home')
-        
+def createProjectView(req):
+    return render(req, 'accounts/createProject.html')
 def CreateProjectView(req):
     return render(req, 'accounts/createProject.html')
 def addProjectView(req):

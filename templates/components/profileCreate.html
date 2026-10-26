@@ -1,0 +1,55 @@
+<div class="glass p-4 p-md-5 d-none" id="view_box" style="border-radius: 20px;">
+    <h2 class="mb-4 text-center">Create Your Profile</h2>
+    <form method="POST" enctype="multipart/form-data" action="{% url 'createProfile' %}">
+        {% csrf_token %}
+        <div class="mb-4 text-center">
+            <div class="avatar-preview mb-3 mx-auto glass d-flex align-items-center justify-content-center"
+                style="width: 120px; height: 120px; border-radius: 50%; overflow: hidden;">
+                {% if user_profile.avatar %}
+                <img src="{{ user_profile.avatar.url }}" alt="Profile Picture"
+                    style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover;">
+                {% else %}
+                <span style="font-size: 2rem;">📷</span>
+                {% endif %}
+
+            </div>
+            <label for="avatar" class="btn glass-btn btn-sm px-4">Upload Avatar</label>
+            <input type="file" id="avatar" name="avatar" class="d-none" accept="image/*">
+        </div>
+          <div class="row">
+            <div class="col-sm-6 mb-3">
+                <label for="live" class="form-label">first Name</label>
+                <input type="text" class="form-control glass-input" id="firstName" name="firstName" placeholder="City, Country">
+            </div>
+            <div class="col-sm-6 mb-4">
+                <label for="birthDay" class="form-label">Last Name</label>
+                <input type="date" class="form-control glass-input" id="firstName" name="firstName">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 mb-3">
+                <label for="rollNumber" class="form-label">Roll Number</label>
+                <input type="text" class="form-control glass-input" id="rollNumber" name="rollNumber"
+                    placeholder="e.g. CS2024-001" required>
+            </div>
+            <div class="col-sm-6 mb-3">
+                <label for="phoneNumber" class="form-label">Phone Number</label>
+                <input type="text" class="form-control glass-input" id="phoneNumber" name="phoneNumber"
+                    placeholder="+1 234 567 8900">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 mb-3">
+                <label for="live" class="form-label">Location (Live)</label>
+                <input type="text" class="form-control glass-input" id="live" name="live" placeholder="City, Country">
+            </div>
+            <div class="col-sm-6 mb-4">
+                <label for="birthDay" class="form-label">Birthday</label>
+                <input type="date" class="form-control glass-input" id="birthDay" name="birthDay">
+            </div>
+        </div>
+        <div class="d-grid gap-2 mt-2">
+            <button type="submit" class="btn glass-btn-primary py-2 fs-5">Save Profile</button>
+        </div>
+    </form>
+</div>
