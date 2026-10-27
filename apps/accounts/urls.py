@@ -13,4 +13,6 @@ urlpatterns = [
     path('verify-otp/', views.verify_otp_view, name='verifyAccountOtp'),
     path('createProfile/', views.createProfileview, name='createProfile'),
     path('createProject/', views.createProjectView, name='createProject'), 
+    path('deleteProject/<int:project_id>/', views.deleteProject, name='deleteProject'),
+    path('editProject/<int:project_id>/', views.editProject, name='editProject'),
 ]

@@ -265,13 +265,30 @@ def createProjectView(req):
             isPrivate=isPrivateInput
         )
     return redirect("home")
+
+@login_required
+def deleteProject(request, project_id):
+    if request.method == 'POST':
+        project = get_object_or_404(Project, id=project_id, user__user=request.user)
+        project.delete()
+        
+    return redirect("home")
+
+@login_required
+def editProject(request, project_id):
+    project = get_object_or_404(Project, id=project_id, user__user=request.user)
+    
+    if request.method == 'POST':
+        project.title = request.POST.get('title')
+        project.projetUrl = request.POST.get('projetUrl')
+        project.description = request.POST.get('description')
+        project.status = request.POST.get('status')
+        project.build_health = request.POST.get('build_health')
+        project.isPrivate = request.POST.get('isPrivate') == 'True'
+        project.save()
+        return redirect("home") 
+    return render(request, "accounts/editProject.html", {"project": project})
+
 def CreateProjectView(req):
     return render(req, 'accounts/createProject.html')
-def addProjectView(req):
-    return render(req, 'accounts/selfProjectinit.html')
-
-def chatView(req):
-    return render(req, 'accounts/index.html')
-def profileView(req):
-    return render(req, 'accounts/index.html')
 
