@@ -27,15 +27,14 @@ def signupView(request):
             messages.error(request, 'Username is already taken!')
             return redirect('signup')
 
-        # Create user as inactive until OTP is verified
-        user = User.objects.create_user(
-            username=username, email=email, password=password
-        )
-        user.is_active = False
-        user.save()
-
         otpCode = str(random.randint(100000, 999999))
-        UserOTP.objects.create(user=user, otp=otpCode)
+        
+        request.session['signup_data'] = {
+            'username': username,
+            'email': email,
+            'password': password,
+            'otp': otpCode
+        }
 
         sender_email = getattr(settings, 'EMAIL_HOST_USER', 'from@capstoneiq.com')
         send_mail(
@@ -45,8 +44,6 @@ def signupView(request):
             [email],
             fail_silently=False,
         )
-
-        request.session['verifyUserId'] = user.id
         messages.success(request, 'OTP sent to your email address.')
         return redirect('otpVerify')
 
@@ -54,22 +51,21 @@ def signupView(request):
 
 
 def verifyOTPView(request):
-    userId = request.session.get('verifyUserId')
-    if not userId:
+    signupData = request.session.get('signup_data')
+    if not signupData:
         messages.error(request, 'Session expired. Please sign up again.')
         return redirect('signup')
 
-    user = get_object_or_404(User, id=userId)
-    userOtp = get_object_or_404(UserOTP, user=user)
-
     if request.method == 'POST':
         entered_otp = request.POST.get('otp')
-        if entered_otp == userOtp.otp:
-            user.is_active = True
-            user.save()
-            userOtp.delete()
+        if entered_otp == signupData['otp']:
+            user = User.objects.create_user(
+                username=signupData['username'], 
+                email=signupData['email'], 
+                password=signupData['password']
+            )
+            request.session.pop('signup_data', None)
             login(request, user)
-            del request.session['verifyUserId']
             messages.success(request, 'Account verified successfully!')
             return redirect('home')
         else:
