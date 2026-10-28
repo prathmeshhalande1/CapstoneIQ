@@ -5,7 +5,7 @@
         <div class="row justify-content-center mt-4">
             <div class="col-12 col-md-10 col-lg-8 col-xl-6 px-4">
                 {% if user_profile.isProfileCreated%}
-                <div class=" glass p-4 p-md-5" style="border-radius: 20px;">
+                <div class=" glass p-4 p-md-5" style="border-radius: 20px;" id="profileDisplayMode">
                     <div class="text-center mb-4">
                         {% if user_profile.avatar %}
                         <img src="{{ user_profile.avatar.url }}" alt="Avatar"
@@ -18,6 +18,7 @@
                         {% endif %}
                         <h3 class="mt-3 mb-1">{{ request.user.get_full_name|default:request.user.username }}</h3>
                         <p class="text-muted mb-0">{{ user_profile.rollNumber }}</p>
+
                     </div>
                     <div class="row text-start mb-4 glass p-3" style="border-radius: 15px;">
                         <div class="col-6 mb-3">
@@ -35,6 +36,12 @@
                         <div class="col-6 mb-0">
                             <small class="text-secondary d-block">user Name</small>
                             <strong>{{ user_profile.user|default:"Not specified" }}</strong>
+                        </div>
+                        <div class="col-12 mt-3 mb-2 text-start">
+                            <button type="button" class="btn glass-btn btn-sm px-4"
+                                onclick="document.getElementById('profileDisplayMode').classList.add('d-none'); document.getElementById('profileEditMode').classList.remove('d-none');">
+                                ✏️ Edit Profile
+                            </button>
                         </div>
                         <!--div class="col-6 mb-0">
                             <button
@@ -54,6 +61,15 @@
                         <div class="glass p-3 mb-3" style="border-radius: 10px;">
                             <h5 class="mb-1">{{ project.title }}</h5>
                             <p class="mb-2 text-muted small">{{ profject.status }} • {{ project.build_health }}</p>
+                            <a href="{% url 'editProject' project.id %}" class="btn glass-btn-primary btn-sm">✏️
+                                Edit</a>
+                            <form method="POST" action="{% url 'deleteProject' project.id %}" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-sm" 
+                onclick="return confirm('Are you sure you want to delete {{ project.title }}?');">
+                🗑️ Delete
+            </button>
+        </form>
                             {% if project.projetUrl %}
                             <a href="{{ project.projetUrl }}" target="_blank" class="btn glass-btn btn-sm">🔗 View
                                 GitHub</a>
@@ -64,6 +80,7 @@
                         {% endfor %}
                     </div>
                 </div>
+                {% include 'components/profileCreate.html' %}
                 {% else %}
                 {% include 'components/profileCreate.html' %}
                 {% endif %}

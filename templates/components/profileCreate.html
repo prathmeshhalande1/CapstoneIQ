@@ -1,4 +1,4 @@
-<div class="glass p-4 p-md-5 d-none" id="view_box" style="border-radius: 20px;">
+<div class="glass p-4 p-md-5 d-none" style="border-radius: 20px;" id="profileEditMode">
     <h2 class="mb-4 text-center">Create Your Profile</h2>
     <form method="POST" enctype="multipart/form-data" action="{% url 'createProfile' %}">
         {% csrf_token %}
@@ -16,36 +16,40 @@
             <label for="avatar" class="btn glass-btn btn-sm px-4">Upload Avatar</label>
             <input type="file" id="avatar" name="avatar" class="d-none" accept="image/*">
         </div>
-          <div class="row">
+        <div class="row">
             <div class="col-sm-6 mb-3">
                 <label for="live" class="form-label">first Name</label>
-                <input type="text" class="form-control glass-input" id="firstName" name="firstName" placeholder="City, Country">
+                <input type="text" class="form-control glass-input" id="firstName" name="firstName"
+                    placeholder="first name" value="{{ request.user.first_name }}">
             </div>
             <div class="col-sm-6 mb-4">
                 <label for="birthDay" class="form-label">Last Name</label>
-                <input type="date" class="form-control glass-input" id="firstName" name="firstName">
+                <input type="text" class="form-control glass-input" id="lastName" name="lastName"
+                    placeholder="last name" value="{{ request.user.last_name }}">
             </div>
         </div>
-        <div class="row">
+        <div class=" row">
             <div class="col-sm-6 mb-3">
                 <label for="rollNumber" class="form-label">Roll Number</label>
                 <input type="text" class="form-control glass-input" id="rollNumber" name="rollNumber"
-                    placeholder="e.g. CS2024-001" required>
+                    placeholder="e.g. 26320" {{ user_profile.rollNumber }} required>
             </div>
             <div class="col-sm-6 mb-3">
                 <label for="phoneNumber" class="form-label">Phone Number</label>
                 <input type="text" class="form-control glass-input" id="phoneNumber" name="phoneNumber"
-                    placeholder="+1 234 567 8900">
+                    placeholder="+1 234 567 8900" value="{{ user_profile.phoneNumber }}">
             </div>
         </div>
         <div class="row">
             <div class="col-sm-6 mb-3">
                 <label for="live" class="form-label">Location (Live)</label>
-                <input type="text" class="form-control glass-input" id="live" name="live" placeholder="City, Country">
+                <input type="text" class="form-control glass-input" id="live" name="live" placeholder="City, Country"
+                    value="{{ user_profile.live }}">
             </div>
             <div class="col-sm-6 mb-4">
                 <label for="birthDay" class="form-label">Birthday</label>
-                <input type="date" class="form-control glass-input" id="birthDay" name="birthDay">
+                <input type="date" class="form-control glass-input" id="birthDay" name="birthDay"
+                    value="{{ user_profile.birthDay|date:'Y-m-d' }}">
             </div>
         </div>
         <div class="d-grid gap-2 mt-2">

@@ -282,8 +282,8 @@ def editProject(request, project_id):
         project.build_health = request.POST.get('build_health')
         project.isPrivate = request.POST.get('isPrivate') == 'True'
         project.save()
-        return redirect("home") 
-    return render(request, "accounts/editProject.html", {"project": project})
+        return redirect("profile") 
+    return render(request, "components/profile.html", {"project": project})
 
 def CreateProjectView(req):
     return render(req, 'accounts/createProject.html')
