@@ -1,3 +1,5 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/chat.css' %}">
 <div id="chatView" class="d-flex flex-grow-1" style="min-width: 0;">
     <div class="groupSidebar">
         <div class="p-3 border-bottom border-secondary border-opacity-25">
@@ -58,5 +60,88 @@
             {% endfor %}
         </div>
 
+    </div>
+    <div class="chatMainArea d-flex flex-column flex-grow-1" style="min-width: 0;">
+        {% if not user_groups %}
+
+        <!-- Top Chat Header -->
+        <div
+            class="chatHeader px-4 py-2 d-flex justify-content-between align-items-center border-bottom border-secondary border-opacity-25">
+            <div class="d-flex align-items-center gap-3 min-w-0">
+                <div class="groupAvatar" id="activeGroupAvatar">
+                    C
+                </div>
+                <div class="min-w-0">
+                    <div class="d-flex align-items-center gap-2">
+                        <h6 class="fw-bold mb-0 text-white text-truncate" id="activeGroupName">CapstoneIQ Core Team</h6>
+                        <span class="badge bg-primary bg-opacity-25 text-info" id="activeGroupBadge">Full-Stack</span>
+                    </div>
+                    <small class="text-secondary d-block text-truncate" id="activeGroupMeta">
+                        👥 <span id="activeGroupCount">3</span> participants • Invite Code: <span
+                            class="text-info font-monospace" id="activeGroupCode">CIQ-8821</span>
+                    </small>
+                </div>
+            </div>
+
+            <!-- Header Actions (Go to Analysis Button) -->
+            <div class="d-flex align-items-center gap-2">
+                <button
+                    class="btn btn-sm glass-btn-primary d-flex align-items-center gap-2 px-3 py-2 rounded-pill fw-semibold"
+                    onclick="goToGroupAnalysis()">
+                    <span>📊</span>
+                    <span>Go to Analysis</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Middle Scrollable Message Feed -->
+        <div class="chatMessages p-4 overflow-auto flex-grow-1 d-flex flex-column gap-3" id="chatMessageContainer">
+            <!-- Date Divider -->
+            <div class="text-center my-2">
+                <span class="badge glass text-secondary fw-normal px-3 py-1">Today</span>
+            </div>
+
+            <div class="messageBubble incoming align-self-start">
+                <div class="small fw-bold text-warning mb-1">pavan</div>
+                <div class="text-light">Share hello </div>
+                <div class="messageTime text-end mt-1">10:00 AM</div>
+            </div>
+
+            <div class="messageBubble incoming align-self-start">
+                <div class="small fw-bold text-warning mb-1">ayush_420</div>
+                <div class="text-light">hi</div>
+                <div class="messageTime text-end mt-1">10:01 AM</div>
+            </div>
+
+            <div class="messageBubble outgoing align-self-end">
+                <div class="small fw-bold text-primary mb-1"> prathamesh</div>
+                <div class="text-white">kay</div>
+                <div class="messageTime text-end mt-1">10:02 AM ✓✓</div>
+            </div>
+        </div>
+
+        <div class="chatInputBar p-3 border-top border-secondary border-opacity-25">
+            <form id="chatMessageForm" class="d-flex align-items-center gap-2 m-0" onsubmit="sendMessage(event)">
+                <button type="button" class="btn glass-btn rounded-circle px-2 py-1" title="Attach File"> ✅</button>
+                <input type="text" id="chatInputText" class="form-control glass-input rounded-pill px-3"
+                    placeholder="Type a message..." autocomplete="off">
+                <button type="submit"
+                    class="btn glass-btn-primary rounded-circle d-flex align-items-center justify-content-center"
+                    style="width: 38px; height: 38px;" title="Send Message">
+                    ➤
+                </button>
+            </form>
+        </div>
+
+        {% else %}
+        <div class="d-flex flex-column align-items-center justify-content-center flex-grow-1 text-center p-4">
+            <div class="display-4 mb-3">💬</div>
+            <h5 class="fw-bold text-white">CapstoneIQ Web Workspace</h5>
+            <p class="text-secondary" style="max-width: 380px;">
+                Select a group from the sidebar or create a new project group to collaborate with your team and track
+                repository analytics.
+            </p>
+        </div>
+        {% endif %}
     </div>
 </div>

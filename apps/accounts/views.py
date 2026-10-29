@@ -108,7 +108,6 @@ def homeView(request):
         group.participant_count = len(participants)
 
     user_projects = profile.projects.all()
-
     context = {
         'user_groups': user_groups,
         'user_profile': profile,
