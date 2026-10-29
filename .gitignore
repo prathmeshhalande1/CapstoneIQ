@@ -16,3 +16,7 @@ db.sqlite3
 # Ignore only specific Bootstrap static files
 static/css/bootstrap.min.css
 static/js/bootstrap.bundle.min.js
+media/
+*.jpg
+*.jpeg
+*.png
