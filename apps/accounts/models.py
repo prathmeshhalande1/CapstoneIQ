@@ -41,6 +41,9 @@ class projectGroup(models.Model):
     members = models.ManyToManyField(
       User, related_name="project_groups", blank=True
   )
+    class Meta:
+            unique_together = ('groupName', 'createdBy')
+
     def save(self, *args, **kwargs):
         if not self.groupCode:
          self.groupCode = (
@@ -49,6 +52,7 @@ class projectGroup(models.Model):
              + "".join(random.choices(string.digits, k=4))
           )
         super().save(*args, **kwargs)
+    
     def __str__(self):
         return f"{self.groupName} ({self.groupCode})"
 
@@ -68,7 +72,8 @@ class GroupMembership(models.Model):
   def __str__(self):
     return f"{self.User.user.username} in {self.group.groupName}"
 
-
-class UserOTP(models.Model):
-  user = models.OneToOneField(User, on_delete=models.CASCADE)
-  otp = models.CharField(max_length=6)
+class groupchat(models.Model):
+   groupid = models.ForeignKey(projectGroup,on_delete=models.CASCADE,null=False,blank=False)
+   sendBy = models.ForeignKey(User,on_delete=models.DO_NOTHING,null=False,blank=False)
+   chat = models.CharField()
+   chatAt = models.DateTimeField(auto_now_add=True)

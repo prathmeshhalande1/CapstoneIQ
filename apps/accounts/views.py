@@ -4,13 +4,12 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.mail import send_mail
-from django.conf import settings
 from django.db.models import Q
-import random,datetime
-import uuid
+from django.db import IntegrityError
+import random
 
 # mycreated models & services
-from .models import projectGroup, userProfile,Project, UserOTP ,GroupMembership
+from .models import projectGroup, userProfile,Project ,GroupMembership
 
 def signupView(request):
     if request.method == 'POST':
@@ -118,13 +117,17 @@ def homeView(request):
 @login_required
 def create_group_view(request):
   if request.method == 'POST':
-    group_name = request.POST.get('group_name')
-    if group_name:
-        group = projectGroup.objects.create(groupName=group_name, createdBy=request.user)
-        profile, _ = userProfile.objects.get_or_create(user=request.user)
-        GroupMembership.objects.get_or_create(student=profile, group=group)
-  return redirect('home')
-
+            try:
+                group_name = request.POST.get('group_name')
+                if group_name:
+                    group = projectGroup.objects.create(groupName=group_name, createdBy=request.user)
+                    profile, _ = userProfile.objects.get_or_create(user=request.user)
+                    GroupMembership.objects.get_or_create(User=profile, group=group)
+                    messages.success(request, "Group created successfully!")
+                    return redirect('home')
+            except IntegrityError:
+                messages.info(request, "You already have a group with this name. Please choose a different name.")
+                return redirect('home')               
 @login_required
 def join_group_view(request):
   if request.method == 'POST':

@@ -15,6 +15,12 @@
                         <label class="form-label">Group Invite Code</label>
                         <input type="text" name="invite_code" class="form-control glass-input text-uppercase fw-bold"
                             placeholder="e.g., ABCD-1234" required>
+                        <label for="project">project</label>
+                        <select name="" id="">
+                            {% for project in user_projects%}
+                            <option value="{{projet.projetUrl}}">{{project.title}}</option>
+                            {%endfor%}
+                        </select>
                     </div>
                 </div>
                 <div class="modal-footer border-secondary border-opacity-25">

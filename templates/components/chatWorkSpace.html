@@ -62,23 +62,25 @@
 
     </div>
     <div class="chatMainArea d-flex flex-column flex-grow-1" style="min-width: 0;">
-        {% if not user_groups %}
-
+        {% if user_groups %}
         <!-- Top Chat Header -->
         <div
             class="chatHeader px-4 py-2 d-flex justify-content-between align-items-center border-bottom border-secondary border-opacity-25">
             <div class="d-flex align-items-center gap-3 min-w-0">
                 <div class="groupAvatar" id="activeGroupAvatar">
-                    C
+                    {{user_groups.groupName}}
                 </div>
                 <div class="min-w-0">
                     <div class="d-flex align-items-center gap-2">
-                        <h6 class="fw-bold mb-0 text-white text-truncate" id="activeGroupName">CapstoneIQ Core Team</h6>
-                        <span class="badge bg-primary bg-opacity-25 text-info" id="activeGroupBadge">Full-Stack</span>
+                        <h6 class="fw-bold mb-0 text-white text-truncate" id="activeGroupName">
+                            {{user_groups.0.groupName}}
+                        </h6>
+                        <span class="badge bg-primary bg-opacity-25 text-info"
+                            id="activeGroupBadge">{{user_groups.category_badge}}</span>
                     </div>
                     <small class="text-secondary d-block text-truncate" id="activeGroupMeta">
                         👥 <span id="activeGroupCount">3</span> participants • Invite Code: <span
-                            class="text-info font-monospace" id="activeGroupCode">CIQ-8821</span>
+                            class="text-info font-monospace" id="activeGroupCode">{{user_groups.groupCode}}</span>
                     </small>
                 </div>
             </div>
@@ -132,7 +134,6 @@
                 </button>
             </form>
         </div>
-
         {% else %}
         <div class="d-flex flex-column align-items-center justify-content-center flex-grow-1 text-center p-4">
             <div class="display-4 mb-3">💬</div>

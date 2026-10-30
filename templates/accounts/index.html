@@ -11,8 +11,28 @@
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
     <link rel="stylesheet" href="{% static 'css/commen.css' %}">
+    <style>
+        .glass-success { border-left: 4px solid #198754 !important; } 
+        .glass-error { border-left: 4px solid #dc3545 !important; }   
+        .glass-warning { border-left: 4px solid #ffc107 !important; } 
+        .glass-info { border-left: 4px solid #0dcaf0 !important; }    
+    </style>
 </head>
 <body>
+
+    {% if messages %}
+    <div class="position-fixed top-0 end-0 p-4" style="z-index: 1050;">
+        {% for message in messages %}
+        <div class="alert glass glass-{{ message.tags }} alert-dismissible fade show d-flex align-items-center px-4 py-3"
+            role="alert">
+            <span class="text-white">{{ message }}</span>
+            <button type="button" class="btn-close btn-close-white ms-3" data-bs-dismiss="alert" aria-label="Close"
+                style="position: relative; right: 0; padding: 0;"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     <div class="appContainer">
         <div class="navRail">
             <button class="navIconBtn active" id="btnChatView" title="Groups & Chat"
@@ -35,6 +55,16 @@
         {% include 'components/profile.html' %}
         {% include 'components/Modals.html' %}
     </div>
+    <script>
+        setTimeout(function() {
+            let alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                alert.style.transition = "opacity 0.5s ease";
+                alert.style.opacity = "0";
+                setTimeout(() => alert.remove(), 500);
+            });
+        }, 5000);
+    </script>
     <!--script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script-->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
