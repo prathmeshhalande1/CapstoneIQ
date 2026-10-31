@@ -15,14 +15,25 @@
             </div>
 
             <div class="d-flex gap-2 mb-2">
-                <input type="text" id="groupSearchInput" class="form-control form-control-sm form-control-dark"
-                    placeholder="Search groups..." onkeyup="applyGroupFilters()">
-                <select id="groupSortSelect" class="form-select form-select-sm form-control-dark" style="width: 110px;"
-                    onchange="applyGroupFilters()">
-                    <option value="default">Sort: All</option>
-                    <option value="name-asc">A - Z</option>
-                    <option value="name-desc">Z - A</option>
-                </select>
+                <input type="text" id="groupSearchInput"
+                    class="form-control glass-input form-control-sm form-control-dark" placeholder="Search groups..."
+                    onkeyup="applyGroupFilters()">
+                <div class="dropdown w-100">
+                    <input type="hidden" name="status" id="statusInput" value="Active / On Track">
+                    <button class="btn form-select glass-input text-white text-start w-100" type="button"
+                        data-bs-toggle="dropdown" id="statusDropdownBtn">
+                        Sort All
+                    </button>
+                    <ul class="dropdown-menu w-100 glass p-2 mt-1"
+                        style="background: rgba(20, 20, 30, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1);">
+                        <li><a class="dropdown-item text-white status-option" href="#"
+                                data-value="Active / On Track">Leatest chat</a></li>
+                        <li><a class="dropdown-item text-white status-option" href="#" data-value="Completed">A to Z</a>
+                        </li>
+                        <li><a class="dropdown-item text-white status-option" href="#" data-value="Paused">Z to A</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
 

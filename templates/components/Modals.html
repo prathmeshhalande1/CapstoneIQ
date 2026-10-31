@@ -178,21 +178,41 @@
                     <div class="row">
                         <div class="col-sm-6 mb-3">
                             <label for="status" class="form-label text-white-50">Status</label>
-                            <select class="form-select glass-input text-white" id="status" name="status"
-                                style="background-color: #0b0b0f;">
-                                <option value="Active / On Track" selected>Active / On Track</option>
-                                <option value="Completed">Completed</option>
-                                <option value="Paused">Paused</option>
-                            </select>
+                            <div class="dropdown w-100">
+                                <input type="hidden" name="status" id="statusInput" value="Active / On Track">
+                                <button class="btn form-select glass-input text-white text-start w-100" type="button"
+                                    data-bs-toggle="dropdown" id="statusDropdownBtn">
+                                    Active / On Track
+                                </button>
+                                <ul class="dropdown-menu w-100 glass p-2 mt-1"
+                                    style="background: rgba(20, 20, 30, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1);">
+                                    <li><a class="dropdown-item text-white status-option" href="#"
+                                            data-value="Active / On Track">Active / On Track</a></li>
+                                    <li><a class="dropdown-item text-white status-option" href="#"
+                                            data-value="Completed">Completed</a></li>
+                                    <li><a class="dropdown-item text-white status-option" href="#"
+                                            data-value="Paused">Paused</a></li>
+                                </ul>
+                            </div>
                         </div>
                         <div class="col-sm-6 mb-3">
                             <label class="form-label text-white-50">Build Health</label>
-                            <select class="form-select glass-input text-white" name="build_health"
-                                style="background-color: #0b0b0f;">
-                                <option value="Passing (98%)" selected>Passing (98%)</option>
-                                <option value="Failing">Failing</option>
-                                <option value="Unknown">Unknown</option>
-                            </select>
+                            <div class="dropdown w-100">
+                                <input type="hidden" name="status" id="statusInput" value="Active / On Track">
+                                <button class="btn form-select glass-input text-white text-start w-100" type="button"
+                                    data-bs-toggle="dropdown" id="statusDropdownBtn">
+                                    ActBuild Health
+                                </button>
+                                <ul class="dropdown-menu w-100 glass p-2 mt-1"
+                                    style="background: rgba(20, 20, 30, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1);">
+                                    <li><a class="dropdown-item text-white status-option" href="#"
+                                            data-value="Active / On Track">Working</a></li>
+                                    <li><a class="dropdown-item text-white status-option" href="#"
+                                            data-value="Completed">Error / Not Working</a></li>
+                                    <li><a class="dropdown-item text-white status-option" href="#"
+                                            data-value="Paused">Same part work same not</a></li>
+                                </ul>
+                            </div>
                         </div>
                         <div class="form-check form-switch mt-2 ms-lg-3">
                             <input class="form-check-input" type="checkbox" name="isPrivate" value="True">
