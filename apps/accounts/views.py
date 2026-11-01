@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.core.mail import send_mail
 from django.db.models import Q
 from django.db import IntegrityError
-import random
+import random,json
 
 # mycreated models & services
 from .models import projectGroup, userProfile,Project ,GroupMembership
@@ -94,8 +94,10 @@ def homeView(request):
     user_groups = projectGroup.objects.filter(
         Q(createdBy=request.user) | Q(group_members__User=profile)
     ).select_related('createdBy').prefetch_related(
-        'group_members__User__user'
+        'group_members__User__user',
+        'group_members__selectedProject'
     ).distinct()
+    groups_data_list = []
     for group in user_groups:
         participants = [group.createdBy]
         participants.extend(
@@ -103,14 +105,36 @@ def homeView(request):
             for membership in group.group_members.all()
             if membership.User.user_id != group.createdBy_id
         )
-        group.chat_participants = participants
-        group.participant_count = len(participants)
+        participants_data = [
+            {
+                "id": p.pk,
+                "username": p.username,
+                "full_name": p.get_full_name() or p.username,
+                "is_creator": (p.pk == group.createdBy_id)
+            }
+            for p in participants
+        ]
+        
+        creator_name = group.createdBy.get_full_name() or group.createdBy.username
+        repo_count = group.group_members.exclude(selectedProject__isnull=True).count()
+        groups_data_list.append({
+            "id": group.pk,
+            "groupName": group.groupName,
+            "category_badge": getattr(group, 'category_badge', 'Academic Batch'),
+            "groupCode": group.groupCode,
+            "createdBy_id": group.createdBy_id,
+            "creater_name":creator_name,
+            "repo_count": repo_count,
+            "participant_count": len(participants),
+            "participants": participants_data
+        })
 
     user_projects = profile.projects.all()
     context = {
         'user_groups': user_groups,
         'user_profile': profile,
         'user_projects': user_projects,
+        'user_groups_json': groups_data_list,
     }
     return render(request, 'accounts/index.html', context)
 

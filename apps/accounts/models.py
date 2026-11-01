@@ -14,20 +14,6 @@ class userProfile(models.Model):
     def __str__(self):
         return f"{self.user.get_full_name()} {self.rollNumber}"
 
-class Project(models.Model):
-    user = models.ForeignKey(userProfile, on_delete=models.CASCADE, related_name='projects')
-    title = models.CharField(max_length=200)
-    description = models.TextField(blank=True)
-    projetUrl = models.URLField(max_length=500, blank=True, null=True)
-    status = models.CharField(max_length=50, default="Active / On Track")
-    build_health = models.CharField(max_length=50, default="Passing (98%)")
-    created_at = models.DateTimeField(auto_now_add=True)
-    isPrivate = models.BooleanField(default=False)
-
-    def __str__(self):
-        return f"{self.title} ({self.user.user.username})"
-    
-
 class projectGroup(models.Model):
     
     groupCode = models.CharField(max_length=20,unique=True)
@@ -55,7 +41,19 @@ class projectGroup(models.Model):
     
     def __str__(self):
         return f"{self.groupName} ({self.groupCode})"
-
+    
+class Project(models.Model):
+    user = models.ForeignKey(userProfile, on_delete=models.CASCADE, related_name='projects')
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    projetUrl = models.URLField(max_length=500, blank=True, null=True)
+    status = models.CharField(max_length=50, default="Active / On Track")
+    build_health = models.CharField(max_length=50, default="Passing (98%)")
+    created_at = models.DateTimeField(auto_now_add=True)
+    isPrivate = models.BooleanField(default=False)
+    group = models.ForeignKey(projectGroup, on_delete=models.SET_NULL, null=True, blank=True, related_name='repositories')
+    def __str__(self):
+        return f"{self.title} ({self.user.user.username})"
 
 class GroupMembership(models.Model):
   User = models.ForeignKey(

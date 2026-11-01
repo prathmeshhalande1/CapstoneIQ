@@ -1,4 +1,5 @@
 {% load static %}
+{{ user_groups_json|json_script:"allGroupsData" }}
 <link rel="stylesheet" href="{% static 'css/chat.css' %}">
 <div id="chatView" class="d-flex flex-grow-1" style="min-width: 0;">
     <div class="groupSidebar">
@@ -19,18 +20,18 @@
                     class="form-control glass-input form-control-sm form-control-dark" placeholder="Search groups..."
                     onkeyup="applyGroupFilters()">
                 <div class="dropdown w-100">
-                    <input type="hidden" name="status" id="statusInput" value="Active / On Track">
+                    <input type="hidden" name="status" id="statusInput" value="latest">
                     <button class="btn form-select glass-input text-white text-start w-100" type="button"
                         data-bs-toggle="dropdown" id="statusDropdownBtn">
                         Sort All
                     </button>
                     <ul class="dropdown-menu w-100 glass p-2 mt-1"
                         style="background: rgba(20, 20, 30, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1);">
-                        <li><a class="dropdown-item text-white status-option" href="#"
-                                data-value="Active / On Track">Leatest chat</a></li>
-                        <li><a class="dropdown-item text-white status-option" href="#" data-value="Completed">A to Z</a>
+                        <li><a class="dropdown-item text-white status-option" href="#" data-value="chat">Leatest
+                                chat</a></li>
+                        <li><a class="dropdown-item text-white status-option" href="#" data-value="name-asc">A to Z</a>
                         </li>
-                        <li><a class="dropdown-item text-white status-option" href="#" data-value="Paused">Z to A</a>
+                        <li><a class="dropdown-item text-white status-option" href="#" data-value="name-dasc">Z to A</a>
                         </li>
                     </ul>
                 </div>
@@ -38,37 +39,6 @@
         </div>
 
         <div class="overflow-auto flex-grow-1" id="groupList">
-            {% for group in user_groups %}
-            <div class="group-item {% if forloop.first %}active{% endif %}" data-name="{{ group.groupName }}"
-                data-size="{{ group.participant_count }}"
-                onclick="selectGroup('{{ group.groupName }}', '{{ group.category_badge }}', '{{ group.participant_count }}', '{{ group.groupCode }}', this)">
-                <div class="d-flex justify-content-between align-items-center mb-1">
-                    <h6 class="fw-bold mb-0 text-truncate">{{ group.groupName }}</h6>
-                    <span class="badge bg-primary bg-opacity-25 text-info">{{ group.category_badge }}</span>
-                </div>
-                <div class="d-flex justify-content-between align-items-center">
-                    <small class="text-secondary">{{ group.repositories.count }} Repos Active</small>
-                    <small class="text-light badge bg-secondary bg-opacity-25">👥 {{ group.participant_count }}</small>
-                </div>
-                <div class="mt-2">
-                    <small class="text-secondary d-block mb-1">People</small>
-                    <ul class="list-unstyled mb-0 small">
-                        {% for participant in group.chat_participants %}
-                        <li class="text-light text-truncate">
-                            {{ participant.get_full_name|default:participant.username }}
-                            {% if participant.pk == group.createdBy_id %}
-                            <span class="text-info">(Creator)</span>
-                            {% endif %}
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-            {% empty %}
-            <div class="p-3 text-center text-muted">
-                <small>No groups found. Create one or join using an invite code!</small>
-            </div>
-            {% endfor %}
         </div>
 
     </div>
@@ -90,7 +60,7 @@
                             id="activeGroupBadge">{{user_groups.category_badge}}</span>
                     </div>
                     <small class="text-secondary d-block text-truncate" id="activeGroupMeta">
-                        👥 <span id="activeGroupCount">3</span> participants • Invite Code: <span
+                        👥 <span id="activeGroupCount">1</span> participants • Invite Code: <span
                             class="text-info font-monospace" id="activeGroupCode">{{user_groups.groupCode}}</span>
                     </small>
                 </div>
