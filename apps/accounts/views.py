@@ -130,10 +130,13 @@ def homeView(request):
         })
 
     user_projects = profile.projects.all()
+    projects_data = list(user_projects.values('id', 'title'))
+    user_projects_json = json.dumps(projects_data)
     context = {
         'user_groups': user_groups,
         'user_profile': profile,
         'user_projects': user_projects,
+        'user_projects_json': user_projects_json,
         'user_groups_json': groups_data_list,
     }
     return render(request, 'accounts/index.html', context)

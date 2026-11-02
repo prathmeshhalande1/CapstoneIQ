@@ -1,6 +1,22 @@
+function applyGroupFilters() {
+    console.log("Search key pressed!");
+    const searchText = $('#groupSearchInput').val().toLowerCase();
+    console.log("Search key:", searchText)
+    $('.groupItem').each(function () {
+        const groupName = $(this).attr('data-name');
+        console.log(groupName)
+        if (groupName) {
+            const lowerName = groupName.toLowerCase();
+            if (lowerName.includes(searchText)) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        }
+    });
+}
 $(document).on('click', '.status-option', function (e) {
     e.preventDefault();
-
     const selectedValue = $(this).attr('data-value');
     const selectedText = $(this).text();
 
@@ -47,12 +63,13 @@ function renderGroupSidebar() {
     }
 
     filteredGroups.forEach((group, index) => {
-        const isActive = (index === 0 && !searchText) ? 'active' : '';
+        const isActive = (group.groupCode === activeGroupCode) ? 'active' : '';
         const groupInitial = group.groupName.charAt(0).toUpperCase();
 
         const groupCardHtml = `
             <div class="groupItem ${isActive}" 
                 data-code="${group.groupCode}"
+                data-name="${group.groupName}"
                 onclick="selectGroupCard('${group.groupCode}', this)">
                 
                 <div class="d-flex align-items-center gap-3 mb-1">
@@ -74,9 +91,12 @@ function renderGroupSidebar() {
         $groupList.append(groupCardHtml);
     });
 }
+let activeGroupCode = null;
 function selectGroupCard(groupCode, element) {
     $('.groupItem').removeClass('active');
     $(element).addClass('active');
+
+    activeGroupCode = groupCode;
 
     const scriptTag = document.getElementById('allGroupsData');
     if (!scriptTag) return;
@@ -90,7 +110,7 @@ function selectGroupCard(groupCode, element) {
         $('#activeGroupBadge').text(selectedGroup.category_badge);
         $('#activeGroupCode').text(selectedGroup.groupCode);
         $('#activeGroupAvatar').text(singleChar);
-        $('#activeGroupCount').text(participant_count);
+        $('#activeGroupCount').text(scriptTag.participant_count);
 
     }
 }
