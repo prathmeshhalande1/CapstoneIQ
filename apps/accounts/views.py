@@ -159,10 +159,23 @@ def create_group_view(request):
 def join_group_view(request):
   if request.method == 'POST':
     invite_code = request.POST.get('invite_code', '').strip().upper()
-    if invite_code:
-      group = get_object_or_404(projectGroup, groupCode=invite_code)
-      profile, _ = userProfile.objects.get_or_create(user=request.user)
-      GroupMembership.objects.get_or_create(student=profile, group=group)
+    project_id = request.POST.get('project_id')
+    try:
+        group = projectGroup.objects.get(groupCode=invite_code)
+    except projectGroup.DoesNotExist:
+        messages.error(request, "❌ Invalid invite code! Please check the code and try again.")
+        return redirect('home')
+    
+    if project_id:
+            try:
+                project = Project.objects.get(id=project_id)
+                project.group = group
+                project.save()
+            except Project.DoesNotExist:
+                messages.error(request, "❌ Please check the project is user Or Internal server error try again.")
+    profile, _ = userProfile.objects.get_or_create(user=request.user)
+    project, _ = project.objects.get_or_create(user=request.user,id=project_id)
+    GroupMembership.objects.get_or_create(User=request.user, group=group,selectedProject=project)
   return redirect('home')
 
 @login_required

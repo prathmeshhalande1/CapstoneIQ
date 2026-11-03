@@ -1,3 +1,26 @@
+let defualtOutput = 'Choose your project...';
+
+function selectProjectOption(clickItem, e) {
+    if (e) e.preventDefault();
+
+    const $item = $(clickItem);
+    const projId = $item.attr('data-id');
+    const projTitle = $item.attr('data-title');
+
+    defualtOutput = projTitle || 'Choose your project...';
+    console.log("Selected Default Output:", defualtOutput);
+
+    $('#selectedProjectId').val(projId);
+
+    $('#modalProjectDropdownBtn span:first-child').text(defualtOutput);
+
+    const dropdownToggle = document.getElementById('modalProjectDropdownBtn');
+    if (dropdownToggle) {
+        const dropdownInstance = bootstrap.Dropdown.getInstance(dropdownToggle) || new bootstrap.Dropdown(dropdownToggle);
+        dropdownInstance.hide();
+    }
+}
+
 function getallUserProject() {
     const scriptTag = document.getElementById('userProjectsData');
     if (!scriptTag) {
@@ -38,7 +61,7 @@ function getallUserProject() {
             <input type="hidden" name="project_id" id="selectedProjectId" value="">
             
             <button class="btn form-select glass-input text-white text-start w-100 d-flex justify-content-between align-items-center" type="button" data-bs-toggle="dropdown" id="modalProjectDropdownBtn">
-                <span>Choose your project...</span>
+                <span>${defualtOutput}</span>
                 <span>▼</span>
             </button>
             
@@ -57,6 +80,49 @@ function getallUserProject() {
     const $pojectOption = $('#pojectOption');
     $pojectOption.html(projectOptionHtml);
 
+}
+function filterModalProjects() {
+    const searchText = $('#projectSearchInput').val().toLowerCase();
+    const scriptTag = document.getElementById('userProjectsData');
+    if (!scriptTag) return;
+
+    let projects = [];
+    try {
+        projects = JSON.parse(scriptTag.textContent.trim());
+        if (typeof projects === 'string') {
+            projects = JSON.parse(projects);
+        }
+    } catch (e) {
+        console.error("❌ Parse error:", e);
+    }
+
+    if (!Array.isArray(projects)) {
+        projects = projects ? [projects] : [];
+    }
+
+    const filtered = projects.filter(p => p.title.toLowerCase().includes(searchText));
+    const $listContainer = $('#modalProjectList');
+    $listContainer.empty();
+
+    if (filtered.length === 0) {
+        $listContainer.html(`<div class="p-2 text-center text-secondary small">No projects found</div>`);
+        return;
+    }
+
+    filtered.forEach(project => {
+        const itemHtml = `
+            <li>
+                <a class="dropdown-item text-white project-option px-2 py-1 mb-1 rounded" href="#" 
+                   data-id="${project.id}" 
+                   data-title="${project.title || 'Untitled Project'}"
+                   onclick="selectProjectOption(this, event)">
+                    <div class="fw-bold text-truncate">${project.title || 'Untitled Project'}</div>
+                    <small class="text-secondary">${project.status || 'Active'}</small>
+                </a>
+            </li>
+        `;
+        $listContainer.append(itemHtml);
+    });
 }
 $(document).ready(function () {
     getallUserProject();
