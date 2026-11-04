@@ -160,22 +160,28 @@ def join_group_view(request):
   if request.method == 'POST':
     invite_code = request.POST.get('invite_code', '').strip().upper()
     project_id = request.POST.get('project_id')
+
     try:
         group = projectGroup.objects.get(groupCode=invite_code)
     except projectGroup.DoesNotExist:
         messages.error(request, "❌ Invalid invite code! Please check the code and try again.")
         return redirect('home')
-    
-    if project_id:
-            try:
-                project = Project.objects.get(id=project_id)
-                project.group = group
-                project.save()
-            except Project.DoesNotExist:
-                messages.error(request, "❌ Please check the project is user Or Internal server error try again.")
+    if not project_id:
+            messages.error(request, "❌ Please select a project to join the group.")
+            return redirect('home')    
+    try:
+        project = Project.objects.get(id=project_id)
+        project.group = group
+        project.save()
+    except Project.DoesNotExist:
+        messages.error(request, "❌ Please check the project is user Or Internal server error try again.")
+
     profile, _ = userProfile.objects.get_or_create(user=request.user)
-    project, _ = project.objects.get_or_create(user=request.user,id=project_id)
-    GroupMembership.objects.get_or_create(User=request.user, group=group,selectedProject=project)
+    GroupMembership.objects.update_or_create(
+        User=profile, 
+        group=group,
+        defaults={'selectedProject': project} )
+    messages.success(request, "🎉 Successfully joined the group and linked your project!")
   return redirect('home')
 
 @login_required

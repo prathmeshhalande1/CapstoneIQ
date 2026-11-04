@@ -1,3 +1,84 @@
-<div id="analyticsView" class="workspace p-4 d-none">
-    <h1>analsis</h1>
+<div id="analyticsView" class="workspace p-0 m-0 d-none">
+    <div class="container-fluid px-2 px-md-3 py-3">
+        <div class="glass-card p-3 mb-4"
+            style="background: rgba(20, 20, 30, 0.75); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 1rem;">
+            <div class="row align-items-center g-3">
+                <div class="col-md-5">
+                    <label class="form-label text-white-50 small mb-1">Select Group (Drives Analytics Context)</label>
+                    <select id="analyticsGroupSelect" class="form-select glass-input text-white form-select-sm"
+                        onchange="onAnalyticsGroupChange()"
+                        style="background: rgba(30, 30, 45, 0.6); border: 1px solid rgba(255, 255, 255, 0.1);">
+                        <option value="" selected disabled>Choose group workspace...</option>
+                    </select>
+                </div>
+                <div class="col-md-5">
+                    <label class="form-label text-white-50 small mb-1">Search Group User / Member</label>
+                    <input type="text" id="analyticsUserSearchInput"
+                        class="form-control glass-input text-white form-control-sm"
+                        placeholder="Search user to filter analytics..." onkeyup="filterAnalyticsByUser()"
+                        style="background: rgba(30, 30, 45, 0.6); border: 1px solid rgba(255, 255, 255, 0.1);">
+                </div>
+                <div class="col-md-2 text-md-end">
+                    <button class="btn btn-sm btn-primary w-100 mt-4 mt-md-0" onclick="refreshAnalyticsTelemetry()"
+                        style="background-color: #6366f1; border: none;">Refresh Telemetry</button>
+                </div>
+            </div>
+        </div>
+        <div class="row g-4 mb-4">
+            <div class="col-md-4">
+                <div class="glass-card p-4 h-100"
+                    style="background: rgba(20, 20, 30, 0.75); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 1rem;">
+                    <h6 class="text-secondary text-uppercase fs-7 fw-bold mb-2">Statistical Anomalies (Z-Score & IQR)
+                    </h6>
+                    <h3 class="text-white fw-bold mb-1" id="metricOutliersCount">2 Outliers</h3>
+                    <p class="text-muted small mb-3">Evaluated via Interquartile Range & Standard Deviations</p>
+                    <div
+                        class="d-flex justify-content-between small border-top border-secondary border-opacity-25 pt-2">
+                        <span class="text-secondary">Z-Score: <strong class="text-white">±2.5σ</strong></span>
+                        <span class="fw-bold" style="color: #818cf8;">IQR Fence: 1.5x</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="glass-card p-4 h-100"
+                    style="background: rgba(20, 20, 30, 0.75); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 1rem;">
+                    <h6 class="text-secondary text-uppercase fs-7 fw-bold mb-2">GitHub Language Mix</h6>
+                    <div id="topLanguagesContainer">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="text-white fw-bold" id="lang1Name">Python</span>
+                            <span class="text-accent" id="lang1Pct" style="color: #818cf8;">45%</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="text-white fw-bold" id="lang2Name">JavaScript</span>
+                            <span class="text-warning" id="lang2Pct">30%</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-white fw-bold" id="lang3Name">HTML/CSS</span>
+                            <span class="text-info" id="lang3Pct">25%</span>
+                        </div>
+                    </div>
+                    <div
+                        class="border-top border-secondary border-opacity-25 pt-2 mt-2 d-flex justify-content-between small">
+                        <span class="text-secondary">Other Languages (Rank 4+):</span>
+                        <span class="text-white fw-semibold" id="otherLanguagesList">TypeScript, SQL</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="glass-card p-4 h-100"
+                    style="background: rgba(20, 20, 30, 0.75); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 1rem;">
+                    <h6 class="text-secondary text-uppercase fs-7 fw-bold mb-2">Total Lines Added</h6>
+                    <h3 class="text-white fw-bold mb-1" id="totalLocMetric">+4,850 LOC</h3>
+                    <p class="text-muted small mb-3">Cumulative net additions from repository commits</p>
+                    <div
+                        class="d-flex justify-content-between small border-top border-secondary border-opacity-25 pt-2">
+                        <span class="text-secondary">Commit Velocity: <strong class="text-white">Active</strong></span>
+                        <span class="text-success fw-bold">Synced</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
