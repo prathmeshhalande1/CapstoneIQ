@@ -110,7 +110,7 @@ function selectGroupCard(groupCode, element) {
         $('#activeGroupBadge').text(selectedGroup.category_badge);
         $('#activeGroupCode').text(selectedGroup.groupCode);
         $('#activeGroupAvatar').text(singleChar);
-        $('#activeGroupCount').text(scriptTag.participant_count);
+        $('#activeGroupCount').text(selectedGroup.participant_count);
 
     }
 }

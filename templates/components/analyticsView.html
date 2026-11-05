@@ -1,6 +1,6 @@
-<div id="analyticsView" class="workspace p-0 m-0 d-none">
+<div id="analyticsView" class="p-0 m-0 d-none w-auto overflow-scroll hide-scrollbar">
     <div class="container-fluid px-2 px-md-3 py-3">
-        <div class="glass-card p-3 mb-4"
+        <div class="w-100 glass-card p-3 mb-4"
             style="background: rgba(20, 20, 30, 0.75); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 1rem;">
             <div class="row align-items-center g-3">
                 <div class="col-md-5">
@@ -25,7 +25,7 @@
             </div>
         </div>
         <div class="row g-4 mb-4">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="glass-card p-4 h-100"
                     style="background: rgba(20, 20, 30, 0.75); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 1rem;">
                     <h6 class="text-secondary text-uppercase fs-7 fw-bold mb-2">Statistical Anomalies (Z-Score & IQR)
@@ -40,7 +40,7 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="glass-card p-4 h-100"
                     style="background: rgba(20, 20, 30, 0.75); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 1rem;">
                     <h6 class="text-secondary text-uppercase fs-7 fw-bold mb-2">GitHub Language Mix</h6>
@@ -66,7 +66,7 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="glass-card p-4 h-100"
                     style="background: rgba(20, 20, 30, 0.75); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 1rem;">
                     <h6 class="text-secondary text-uppercase fs-7 fw-bold mb-2">Total Lines Added</h6>
@@ -80,5 +80,79 @@
                 </div>
             </div>
         </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-lg-8">
+                <div class="glass-card p-4 h-100 d-flex flex-column justify-content-between"
+                    style="background: rgba(20, 20, 30, 0.75); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 1rem; min-height: 380px;">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="text-white fw-bold mb-0">Lines of Code Growth (Python Matplotlib Backend)</h5>
+                        <small class="text-secondary" id="activeChartContext">Group: All | User: All</small>
+                    </div>
+                    <div id="pythonGraphContainer"
+                        class="w-100 rounded border border-secondary border-opacity-25 d-flex flex-column justify-content-center align-items-center flex-grow-1"
+                        style="background: rgba(30, 30, 45, 0.4); min-height: 280px;">
+                        <img id="pythonMatplotlibChartImg" src="" alt="Matplotlib Graph"
+                            class="img-fluid rounded d-none" style="max-height: 280px;">
+                        <div id="graphPlaceholderText" class="text-center p-3">
+                            <span class="text-secondary small d-block mb-1">Canvas Ready</span>
+                            <span class="text-muted fs-7">Select a group or click a member below to reload analytics
+                                context...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="glass-card p-4 h-100 d-flex flex-column"
+                    style="background: rgba(20, 20, 30, 0.75); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 1rem;">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="text-white fw-bold mb-0">Group Members</h5>
+                        <small class="text-secondary" id="memberCountBadge">Click member to switch context</small>
+                    </div>
+                    <div id="groupMembersListContainer" style="max-height: 310px; overflow-y: auto;"
+                        class="pe-1 flex-grow-1">
+                        <div class="p-2 rounded mb-2 d-flex justify-content-between align-items-center member-item-card"
+                            onclick="selectMemberContext('Prathamesh', 'CapstoneIQ')"
+                            style="background: rgba(30, 30, 45, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); cursor: pointer; transition: background 0.2s;">
+                            <div>
+                                <span class="text-white fw-semibold small d-block">Prathamesh</span>
+                                <small class="text-secondary fs-8">Project: CapstoneIQ</small>
+                            </div>
+                            <span class="badge px-2 py-1 fs-8"
+                                style="background: rgba(99, 102, 241, 0.15); color: #818cf8;">Active</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-12">
+                    <div class="glass-card p-4"
+                        style="background: rgba(20, 20, 30, 0.75); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 1rem;">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h5 class="text-white fw-bold mb-0">Multi-User Commit Velocity (Multi-Line Comparison)
+                                </h5>
+                                <p class="text-secondary small mb-0">Compares lines of code added simultaneously across
+                                    multiple group members on a single plot.</p>
+                            </div>
+                            <div>
+                                <button class="btn btn-sm btn-outline-light" onclick="renderMultiUserChart()"
+                                    style="border-color: rgba(255,255,255,0.2);">Generate Comparison Plot</button>
+                            </div>
+                        </div>
+                        <div class="w-100 rounded border border-secondary border-opacity-25 text-center p-4"
+                            style="background: rgba(30, 30, 45, 0.4); min-height: 250px;">
+                            <img id="multiLineMatplotlibImg" src="" alt="Multi-Line Comparison Graph"
+                                class="img-fluid rounded d-none" style="max-height: 240px;">
+                            <div id="multiLinePlaceholder" class="text-center py-5">
+                                <span class="text-secondary small d-block mb-1">Multi-Line Canvas Ready</span>
+                                <span class="text-muted fs-7">Click 'Generate Comparison Plot' to render multi-user
+                                    trends via Python.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
