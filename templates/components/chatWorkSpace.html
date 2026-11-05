@@ -1,6 +1,6 @@
 {% load static %}
 {{ user_groups_json|json_script:"allGroupsData" }}
-{{  user_projects_json|json_script:"userProjectsData"}}
+{{ user_projects_json|json_script:"userProjectsData"}}
 <link rel="stylesheet" href="{% static 'css/chat.css' %}">
 <div id="chatView" class="d-flex flex-grow-1" style="min-width: 0;">
     <div class="groupSidebar">

@@ -71,9 +71,7 @@ GITHUB_ACCESS_TOKEN=your_github_personal_access_token
    - Go to GitHub **Settings** > **Developer settings** > **Personal access tokens** > **Tokens (classic)** (or click [here](https://github.com/settings/tokens)).
    - Generate a new token with `repo` scope permissions and paste it as `GITHUB_ACCESS_TOKEN`.
 
-> 📺 **Need a visual guide?** Watch this helpful tutorial on [How to Generate GitHub Tokens and Gmail App Passwords](https://www.youtube.com/results?search_query=how+to+get+github+personal+access+token+and+gmail+app+password).
-or
-> 📺 **Need a visual guide?** Watch this helpful tutorial on [How to Generate GitHub Tokens and Gmail App Passwords](https://www.youtube.com/watch?v=Vylc7UdQDi0).
+> 📺 **Need a visual guide?** Watch this helpful tutorial on [How to Generate GitHub Tokens and Gmail App Passwords](https://www.youtube.com/results?search_query=how+to+get+github+personal+access+token+and+gmail+app+password).**or** [GitHub Tokens and Gmail App Passwords direact link of vidow](https://www.youtube.com/watch?v=Vylc7UdQDi0).
 
 ### 7.Run the Development Server
 ```bash
