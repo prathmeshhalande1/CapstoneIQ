@@ -1,15 +1,17 @@
+{% load static %}
+{{ user_groups_json|json_script:"allGroupsData" }}
 <div id="analyticsView" class="p-0 m-0 d-none w-auto overflow-scroll hide-scrollbar">
     <div class="container-fluid px-2 px-md-3 py-3">
         <div class="w-100 glass-card p-3 mb-4"
             style="background: rgba(20, 20, 30, 0.75); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 1rem;">
             <div class="row align-items-center g-3">
                 <div class="col-md-5">
-                    <label class="form-label text-white-50 small mb-1">Select Group (Drives Analytics Context)</label>
-                    <select id="analyticsGroupSelect" class="form-select glass-input text-white form-select-sm"
-                        onchange="onAnalyticsGroupChange()"
-                        style="background: rgba(30, 30, 45, 0.6); border: 1px solid rgba(255, 255, 255, 0.1);">
-                        <option value="" selected disabled>Choose group workspace...</option>
-                    </select>
+                    <div class="mb-3">
+                        <label for="groupOption">group</label>
+                        <div id="groupOption">
+
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-5">
                     <label class="form-label text-white-50 small mb-1">Search Group User / Member</label>
@@ -156,3 +158,4 @@
             </div>
         </div>
     </div>
+    <script src="{% static 'js/analsis.js' %}"></script>

@@ -1,4 +1,5 @@
 {% load static %}
+{{ user_groups_json|json_script:"allGroupsData" }}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -60,10 +61,11 @@
                 {%endif%}
             </div>
         </div>
+        {% include 'components/Modals.html' %}
         {% include 'components/profile.html' %}
         {% include 'components/chatWorkSpace.html' %}
         {% include 'components/analyticsView.html' %}
-        {% include 'components/Modals.html' %}
+        
     </div>
     <script>
         setTimeout(function () {
@@ -80,6 +82,8 @@
     <script src="{% static 'js/dropdown.js' %}"></script>
     <script src="{% static 'js/groupDataAndChangeUi.js' %}"></script>
     <script src="{% static 'js/index.js' %}"></script>
+    <script src="{% static 'js/analsis.js' %}"></script>
+    
 </body>
 
 </html>

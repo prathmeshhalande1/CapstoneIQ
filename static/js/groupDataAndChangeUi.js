@@ -109,10 +109,15 @@ function selectGroupCard(groupCode, element) {
         $('#activeGroupName').text(selectedGroup.groupName);
         $('#activeGroupBadge').text(selectedGroup.category_badge);
         $('#activeGroupCode').text(selectedGroup.groupCode);
-        $('#activeGroupAvatar').text(singleChar);
         $('#activeGroupCount').text(selectedGroup.participant_count);
-
+        sessionStorage.setItem('group', JSON.stringify(selectedGroup));
     }
+}
+
+function goToGroupAnalysis() {
+    $('#chatView').addClass('d-none').removeClass('d-flex');
+    $('#analyticsView').removeClass('d-none').toggleClass('d-flex');
+    $('.navIconBtn').removeClass('active'); $("#AnalyticsView").addClass('active');
 }
 $(document).ready(function () {
     renderGroupSidebar();
