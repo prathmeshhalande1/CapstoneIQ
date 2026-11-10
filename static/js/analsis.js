@@ -1,4 +1,5 @@
-let defualtOutput1 = 'Choose your project...';
+
+let defualtOutput1 = 'Choose your group...';
 
 function selectProjectOption(clickItem, e) {
     if (e) e.preventDefault();
@@ -7,7 +8,7 @@ function selectProjectOption(clickItem, e) {
     const projId = $item.attr('data-id');
     const projTitle = $item.attr('data-title');
 
-    defualtOutput1 = projTitle || 'Choose your project...';
+    defualtOutput1 = projTitle || 'Choose your group...';
     console.log("Selected Default Output:", defualtOutput1);
 
     $('#selectedProjectId').val(projId);
@@ -19,12 +20,33 @@ function selectProjectOption(clickItem, e) {
         const dropdownInstance = bootstrap.Dropdown.getInstance(dropdownToggle) || new bootstrap.Dropdown(dropdownToggle);
         dropdownInstance.hide();
     }
+
+    const scriptTag = document.getElementById('allGroupsData');
+    if (!scriptTag) {
+        console.warn("⚠️ allGroupsData script tag missing from page!");
+        return;
+    }
+    let group = [];
+    try {
+        let rawContent = scriptTag.textContent.trim();
+        group = JSON.parse(rawContent);
+        if (typeof group === 'string') {
+            group = JSON.parse(group);
+        }
+    } catch (e) {
+        console.error("❌ Failed to parse group JSON:", e);
+    }
+
+
+    const Data = group.filter(i => String(i.id) === String(projId))
+    console.log(Data)
+    sessionStorage.setItem('group', JSON.stringify(Data))
 }
 
 function getallUserProject() {
-    const scriptTag = document.getElementById('userProjectsData');
+    const scriptTag = document.getElementById('allGroupsData');
     if (!scriptTag) {
-        console.warn("⚠️ userProjectsData script tag missing from page!");
+        console.warn("⚠️ allGroupsData script tag missing from page!");
         return;
     }
     let projects = [];
@@ -42,14 +64,14 @@ function getallUserProject() {
     const topProjects = projects.slice(0, 5);
 
     let listItemsHtml = '';
-    topProjects.forEach(project => {
+    topProjects.forEach(group => {
         listItemsHtml += `
             <li>
                 <a class="dropdown-item text-white project-option px-2 py-1 mb-1" href="#" 
-                   data-id="${project.id}" 
-                   data-title="${project.title}"
+                   data-id="${group.id}" 
+                   data-title="${group.groupName}"
                    onclick="selectProjectOption(this, event)">
-                    <div class="fw-bold text-truncate">${project.title} <span class="text-secondary text-end">${project.status || 'Active'}</span></div>
+                    <div class="fw-bold text-truncate">${group.groupName} <span class="text-secondary text-end">${group.createdAt || 'Active'}</span></div>
                 </a>
             </li>
         `;
@@ -65,12 +87,12 @@ function getallUserProject() {
                 <span>▼</span>
             </button>
             
-            <ul class="dropdown-menu w-100 glass p-2 mt-1" style="background: rgba(20, 20, 30, 0.93); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1);">
+            <ul class="dropdown-menu w-100 glass p-2 mt-1" style="background: rgba(20, 20, 30, 0.93);  backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1);">
                 <li class="px-2 pb-3 pt-1 border-bottom border-secondary border-opacity-25 sticky-top ">
-                    <input type="text" id="projectSearchInput" class="form-control form-control-sm glass-input text-white" placeholder="Search repositories..." onkeyup="filterModalProjects()" style="outline: none; box-shadow: none;">
+                    <input type="text" id="groupSearchInput" class="form-control form-control-sm glass-input text-white" placeholder="Search repositories..." onkeyup="filterModalGroup()" style="outline: none; box-shadow: none;">
                 </li>
                 
-                <div id="modalProjectList" class="mt-2">
+                <div id="modalGroupList" class="mt-2"  style="z-index: 100000;">
                     ${listItemsHtml}
                 </div>
             </ul>
@@ -81,9 +103,10 @@ function getallUserProject() {
     $groupOption.html(projectOptionHtml);
 
 }
-function filterModalProjects() {
-    const searchText = $('#projectSearchInput').val().toLowerCase();
-    const scriptTag = document.getElementById('userProjectsData');
+function filterModalGroup() {
+    console.log("1")
+    const searchText = $('#groupSearchInput').val().toLowerCase();
+    const scriptTag = document.getElementById('allGroupsData');
     if (!scriptTag) return;
 
     let projects = [];
@@ -100,8 +123,8 @@ function filterModalProjects() {
         projects = projects ? [projects] : [];
     }
 
-    const filtered = projects.filter(p => p.title.toLowerCase().includes(searchText));
-    const $listContainer = $('#modalProjectList');
+    const filtered = projects.filter(p => p.groupName.toLowerCase().includes(searchText));
+    const $listContainer = $('#modalGroupList');
     $listContainer.empty();
 
     if (filtered.length === 0) {
@@ -109,15 +132,15 @@ function filterModalProjects() {
         return;
     }
 
-    filtered.forEach(project => {
+    filtered.forEach(group => {
         const itemHtml = `
             <li>
                 <a class="dropdown-item text-white project-option px-2 py-1 mb-1 rounded" href="#" 
-                   data-id="${project.id}" 
-                   data-title="${project.title || 'Untitled Project'}"
+                   data-id="${group.id}" 
+                   data-title="${group.groupName || 'Untitled Project'}"
                    onclick="selectProjectOption(this, event)">
-                    <div class="fw-bold text-truncate">${project.title || 'Untitled Project'}</div>
-                    <small class="text-secondary">${project.status || 'Active'}</small>
+                    <div class="fw-bold text-truncate">${group.groupName || 'Untitled Project'}</div>
+                    <small class="text-secondary">${group.createdAt || 'Active'}</small>
                 </a>
             </li>
         `;
