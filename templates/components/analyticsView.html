@@ -7,21 +7,19 @@
             <div class="row align-items-center g-3">
                 <div class="col-md-5">
                     <div class="mb-3">
-                        <div id="groupOption" >
-
+                        <div id="groupOption">
                         </div>
                     </div>
                 </div>
                 <div class="col-md-5">
-                    <label class="form-label text-white-50 small mb-1">Search Group User / Member</label>
-                    <input type="text" id="analyticsUserSearchInput"
-                        class="form-control glass-input text-white form-control-sm"
-                        placeholder="Search user to filter analytics..." onkeyup="filterAnalyticsByUser()"
-                        style="background: rgba(30, 30, 45, 0.6); border: 1px solid rgba(255, 255, 255, 0.1);">
+                    <div class="mb-3">
+                        <div id="userOption">
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-2 text-md-end">
-                    <button class="btn btn-sm btn-primary w-100 mt-4 mt-md-0" onclick="refreshAnalyticsTelemetry()"
-                        style="background-color: #6366f1; border: none;">Refresh Telemetry</button>
+                    <button class="btn btn-sm btn-primary w-100 mt-4 mt-md-0"
+                        style="background-color: #6366f1; border: none;" id="refreshTelemetryBtn">Refresh Telemetry</button>
                 </div>
             </div>
         </div>
@@ -67,7 +65,7 @@
                 </div>
             </div>
 
-            <div class="col-md-6" style="z-index: 5;" >
+            <div class="col-md-6" style="z-index: 5;">
                 <div class="glass-card p-4 h-100"
                     style="background: rgba(20, 20, 30, 0.75); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 1rem;">
                     <h6 class="text-secondary text-uppercase fs-7 fw-bold mb-2">Total Lines Added</h6>
@@ -157,4 +155,3 @@
             </div>
         </div>
     </div>
-    
