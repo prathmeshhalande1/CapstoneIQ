@@ -40,6 +40,8 @@ function selectProjectOption(clickItem, e) {
 
     const Data = group.filter(i => String(i.id) === String(projId))
     console.log(Data)
+    Data[0].participants = Data[0].participants.filter(user => user.is_creator !== true);
+    console.log(Data)
     sessionStorage.setItem('group', JSON.stringify(Data))
 }
 
