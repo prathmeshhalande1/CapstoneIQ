@@ -14,7 +14,7 @@ function refreshTelemetry() {
             user: JSON.stringify(userData)
         },
         success: function (response) {
-            console.log("Repository URLs:", response.repository_urls);
+            console.log("Repository URLs:", response.all_commits);
         },
         error: function (xhr, status, error) {
             console.log("Status Code:", xhr.status);
