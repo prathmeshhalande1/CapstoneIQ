@@ -18,7 +18,6 @@ class commitLog(models.Model):
     html_url = models.URLField(max_length=500, null=True, blank=True)
 
     syncedAt = models.DateTimeField(auto_now=True)
-
     class Meta:
         constraints = [
             models.UniqueConstraint(
@@ -29,3 +28,34 @@ class commitLog(models.Model):
 
     def __str__(self):
         return f"{self.commitSha[:7]} (+{self.addline}/-{self.deletline})"
+    
+class RepositorySync(models.Model):
+    user = models.ForeignKey(
+        userProfile,
+        on_delete=models.CASCADE,
+        related_name="repository_syncs"
+    )
+    repository = models.CharField(max_length=255)
+    last_commit_sha = models.CharField(
+        max_length=40,
+        null=True,
+        blank=True
+    )
+    last_commit_date = models.DateTimeField(
+        null=True,
+        blank=True
+    )
+    last_synced_at = models.DateTimeField(
+        null=True,
+        blank=True
+    )
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "repository"],
+                name="unique_user_repository_sync"
+            )
+        ]
+
+    def __str__(self):
+        return self.repository
