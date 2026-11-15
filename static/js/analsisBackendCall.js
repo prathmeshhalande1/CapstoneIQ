@@ -15,6 +15,7 @@ function refreshTelemetry() {
         },
         success: function (response) {
             console.log("Repository URLs:", response.all_commits);
+            console.log("Repository URLs:", response.analytics)
         },
         error: function (xhr, status, error) {
             console.log("Status Code:", xhr.status);
