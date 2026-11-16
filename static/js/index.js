@@ -1,5 +1,3 @@
-const { data } = require("jquery");
-
 function switchMainView(viewId, btn) {
     $('#chatView, #analyticsView, #profileView').addClass('d-none').removeClass('d-flex');
     $('#' + viewId).removeClass('d-none').toggleClass('d-flex', viewId === 'chatView');
@@ -14,5 +12,15 @@ function fillOption() {
     console.log(dataGroup, dataUser)
 }
 $(document).ready(function () {
-    fillOption()
+
+    const params = new URLSearchParams(window.location.search);
+
+    console.log("Show Profile:", params.get('show_profile'));
+
+    if (params.get('show_profile') === 'true') {
+        console.log("Opening Profile View");
+
+        switchMainView('profileView', $('#profileViewBtn'));
+    }
+
 });

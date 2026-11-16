@@ -260,7 +260,6 @@ def createProfileview(req):
     if req.method == 'POST':
         avatarInput = req.FILES.get('avatar')
 
-
         rollNumberInput = req.POST.get('rollNumber')
         phoneNumberInput = req.POST.get('phoneNumber')
         liveInput = req.POST.get('live')
@@ -285,7 +284,7 @@ def createProfileview(req):
 
         req.user.save()
         profile.save()
-        return redirect('home')
+        return redirect('/accounts/?show_profile=true')
     return redirect('home')
 def createProjectView(req):
     if req.method == 'POST':
