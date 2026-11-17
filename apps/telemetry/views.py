@@ -125,13 +125,26 @@ def sync_repository(repo_url, user):
         raise ValueError("Invalid repository path")
     owner, repo_name = parts
     repository = f"{owner}/{repo_name}"
+    session = requests.Session()
+    session.headers.update(get_github_headers())
     sync_record, created = RepositorySync.objects.get_or_create(
         user=user,
         repository=repository
     )
+    language_url = f"https://api.github.com/repos/{owner}/{repo_name}/languages"
+    language_response = session.get(language_url, timeout=20)
+    language_response.raise_for_status()
+
+    language_bytes = language_response.json()
+    total_bytes = sum(language_bytes.values())
+
+    language_percentage = {
+        language: round((byte_count / total_bytes) * 100, 2)
+        for language, byte_count in language_bytes.items()
+    } if total_bytes > 0 else {}
+
     last_sha = sync_record.last_commit_sha
-    session = requests.Session()
-    session.headers.update(get_github_headers())
+    
     new_commits = []
     page = 1
     checkpoint_found = False
@@ -216,7 +229,8 @@ def sync_repository(repo_url, user):
     return {
         "repository": repository,
         "new_commits": len(records),
-        "status": "success"
+        "status": "success",
+        "languages": language_percentage
     }
 
 
@@ -285,6 +299,29 @@ def get_user_group_repositories(request):
     return JsonResponse({
         "status": True,
         "repositories": results,
+
+        "language_usage": {
+            language: round(
+                sum(
+                    repo["languages"].get(language, 0)
+                    for repo in results
+                    if repo["status"] == "success"
+                ) / max(
+                    sum(
+                        sum(repo["languages"].values())
+                        for repo in results
+                        if repo["status"] == "success"
+                    ), 1
+                ) * 100,
+                2
+            )
+            for language in set(
+                language
+                for repo in results
+                    if repo["status"] == "success"
+                        for language in repo["languages"]
+            )
+        },
 
         "total_commits": len(all_commits),
         "all_commits": all_commits,
