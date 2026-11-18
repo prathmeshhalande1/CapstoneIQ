@@ -28,15 +28,14 @@
             <div class="col-md-3" style="z-index: 5;">
                 <div class="glass-card p-4 h-100"
                     style="background: rgba(20, 20, 30, 0.75); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 1rem;">
-                    <h6 class="text-secondary text-uppercase fs-7 fw-bold mb-2">Statistical Anomalies (Z-Score & IQR)
+                    <h6 class="text-secondary text-uppercase fs-7 fw-bold mb-2">Statistical Anomalies (IQR)
                     </h6>
-                    <h3 class="text-white fw-bold mb-1" id="metricOutliersCount">0 Outliers</h3>
+                    <h3 class="text-white fw-bold mb-1" id="iqrOutliers">0 IQR</h3>
                     <p class="text-muted small mb-3">Evaluated via Interquartile Range & Standard Deviations</p>
                     <div
                         class="d-flex justify-content-between small border-top border-secondary border-opacity-25 pt-2">
-                        <span class="text-secondary">Z-Score: <strong class="text-white"
-                                id="zScoreOutliers">0</strong></span>
-                        <span class="fw-bold" style="color: #818cf8;">IQR :<span id="iqrOutliers">0</span></span>
+                        <span class="text-secondary">Q1: <strong class="text-white" id="Q1value">0</strong></span>
+                        <span class="fw-bold" style="color: #818cf8;">Q3 :<span id="Q3value">0</span></span>
                     </div>
                 </div>
             </div>
@@ -74,13 +73,17 @@
                     style="background: rgba(20, 20, 30, 0.75); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 1rem;">
                     <h6 class="text-secondary text-uppercase fs-7 fw-bold mb-2">Total Lines Added</h6>
                     <h3 class="text-white fw-bold mb-1" id="totalLocMetric">
-                    +0 LOC
+                        +0 LOC
                     </h3>
-                    <p class="text-muted small">
+                    <p class=" small" style="color: #818cf8;">
                         Commits: <span id="totalCommitsMetric">0</span>
+                        |
+                        Deleted: <span id="totalAddMetric">0</span>
                         |
                         Deleted: <span id="totalDeletedMetric">0</span>
                     </p>
+
+                    <p class="text-white fw-bold">averageLines :<span id="averageLines">0</span></p>
                     <p class="text-muted small mb-3">Cumulative net additions from repository commits</p>
                     <div
                         class="d-flex justify-content-between small border-top border-secondary border-opacity-25 pt-2">
@@ -96,7 +99,7 @@
                 <div class="glass-card p-4 h-100 d-flex flex-column justify-content-between"
                     style="background: rgba(20, 20, 30, 0.75); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 1rem; min-height: 380px;">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="text-white fw-bold mb-0">Lines of Code Growth (Python Matplotlib Backend)</h5>
+                        <h5 class="text-white fw-bold mb-0">Lines of Code Growth </h5>
                         <small class="text-secondary" id="activeChartContext">Group: All | User: All</small>
                     </div>
                     <div id="pythonGraphContainer"

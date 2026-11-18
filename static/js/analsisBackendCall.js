@@ -47,8 +47,16 @@ function updateTelemetryDashboard(response) {
         (Number(summary.z_score_outliers || 0) +
             Number(summary.iqr_outliers || 0)) + ' Outliers'
     );
+    console.log("summary.z_score_outliers", summary.z_score_outliers)
+    console.log("average_lines", summary.average_lines)
     $('#zScoreOutliers').text(summary.z_score_outliers || 0);
-    $('#iqrOutliers').text(summary.iqr_outliers || 0);
+    $('#iqrOutliers').text(summary.iqr || 0);
+    $('#totalCommitsMetric').text(summary.total_commits || 0);
+    $('#totalDeletedMetric').text(summary.total_deleted || 0);
+    $('#totalAddMetric').text(summary.total_lines || 0);
+    $('#Q1value').text(summary.q1 || 0);
+    $('#Q3value').text(summary.q3 || 0);
+    $('#averageLines').text(summary.average_lines || 0);
     $('#totalLocMetric').text(
         '+' + Number(summary.total_added || 0).toLocaleString() + ' LOC'
     );
@@ -181,7 +189,15 @@ function updateTelemetryDashboard(response) {
                         }
                     }
                 },
-
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        align: 'center',
+                        labels: {
+                            color: '#ffffff'
+                        }
+                    }
+                },
                 scales: {
                     x: {
                         ticks: {

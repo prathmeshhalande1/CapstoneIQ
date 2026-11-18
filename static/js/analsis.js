@@ -43,6 +43,7 @@ function selectProjectOption(clickItem, e) {
     Data[0].participants = Data[0].participants.filter(user => user.is_creator !== true);
     console.log(Data)
     sessionStorage.setItem('group', JSON.stringify(Data))
+    userBox()
 }
 
 function getallUserProject() {
@@ -133,6 +134,7 @@ function filterModalGroup() {
         $listContainer.html(`<div class="p-2 text-center text-secondary small">No projects found</div>`);
         return;
     }
+
 
     filtered.forEach(group => {
         const itemHtml = `
@@ -305,7 +307,48 @@ function filterModalUsers() {
         $listContainer.append(itemHtml);
     });
 }
+function userBox() {
+    console.log("hudhahhudhaiuhdiuash")
+    let group = [];
 
+    try {
+        group = JSON.parse(sessionStorage.getItem('group') || '[]');
+    } catch (e) {
+        console.error("Failed to parse group session:", e);
+    }
+
+    const participants = group[0]?.participants || [];
+
+
+    const $listContainer = $('#groupMembersListContainer');
+    $listContainer.empty();
+
+    if (participants.length === 0) {
+        $listContainer.html(`
+            <div class="p-2 text-center text-secondary small">
+                No users found
+            </div>
+        `);
+        return;
+    }
+
+    participants.forEach(user => {
+        const itemHtml = `
+            <div class="p-2 rounded mb-2 d-flex justify-content-between align-items-center member-item-card"
+                            onclick="selectMemberContext(${user.username}, '')"
+                            style="background: rgba(30, 30, 45, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); cursor: pointer; transition: background 0.2s;">
+                <div>
+                    <span class="text-white fw-semibold small d-block">${user.username}</span>
+                    <small class="text-secondary fs-8">Project: ${user.full_name}</small>
+                </div>
+                <span class="badge px-2 py-1 fs-8" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;">Active</span>
+            </div>
+        `;
+
+        $listContainer.append(itemHtml);
+    });
+
+}
 $(document).ready(function () {
     getallGroupUsers();
 });
