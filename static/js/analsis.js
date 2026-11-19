@@ -7,7 +7,6 @@ function selectProjectOption(clickItem, e) {
     const $item = $(clickItem);
     const projId = $item.attr('data-id');
     const projTitle = $item.attr('data-title');
-
     defualtOutput1 = projTitle || 'Choose your group...';
     console.log("Selected Default Output:", defualtOutput1);
 
@@ -163,7 +162,6 @@ function selectUserOption(clickItem, e) {
     const $item = $(clickItem);
     const userId = $item.attr('data-id');
     const userName = $item.attr('data-username');
-
     defaultUserOutput = userName || 'Choose your user...';
     console.log("Selected Default User:", defaultUserOutput);
 
@@ -309,14 +307,14 @@ function filterModalUsers() {
 }
 function userBox() {
     console.log("hudhahhudhaiuhdiuash")
+    
     let group = [];
-
     try {
         group = JSON.parse(sessionStorage.getItem('group') || '[]');
     } catch (e) {
         console.error("Failed to parse group session:", e);
     }
-
+    const groupData = group[0] || {};
     const participants = group[0]?.participants || [];
 
 
@@ -335,7 +333,8 @@ function userBox() {
     participants.forEach(user => {
         const itemHtml = `
             <div class="p-2 rounded mb-2 d-flex justify-content-between align-items-center member-item-card"
-                            onclick="selectMemberContext(${user.username}, '')"
+                            data-group-id="${groupData.id}"
+                            data-user-id="${user.id}"
                             style="background: rgba(30, 30, 45, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); cursor: pointer; transition: background 0.2s;">
                 <div>
                     <span class="text-white fw-semibold small d-block">${user.username}</span>

@@ -1,3 +1,5 @@
+const userNameText = $("#userName")
+const groupNameText = $("#groupName")
 function refreshTelemetry() {
     const groupId = $('#selectedProjectId').val();
     const userId = $('#selectedUserId').val();
@@ -34,9 +36,72 @@ function refreshTelemetry() {
         },
         complete: function () {
             refreshBtn.prop('disabled', false).text('Refresh Telemetry');
+            const u = JSON.parse(sessionStorage.getItem('user') || '[]');
+            const g = JSON.parse(sessionStorage.getItem('group') || '[]');
+            console.log(g[0].groupName)
+            console.log(u[0].username)
+            groupNameText.text(g[0].groupName)
+            userNameText.text(u[0].username)
         }
     });
 }
+
+$(document).on('click', '.member-item-card', function () {
+
+    const groupId = $(this).data('group-id');
+    const userId = $(this).data('user-id');
+
+    const userData = JSON.parse(sessionStorage.getItem('user') || '[]');
+
+    const $refreshBtn = $('#refreshBtn');
+
+    $refreshBtn.prop('disabled', true).text('Loading...');
+
+    $.ajax({
+        url: '/Telemetry/get-user-group-repositories/',
+        type: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        data: {
+            group_id: groupId,
+            user_id: userId,
+            user: JSON.stringify(userData)
+        },
+
+        success: function (response) {
+            if (response.status === true) {
+
+                console.log("Repository all commit:", response.all_commits);
+                console.log("Repository summary:", response.analytics);
+                console.log("Repository language:", response.language_usage);
+
+                updateTelemetryDashboard(response);
+
+                console.log("Telemetry updated successfully!");
+
+            } else {
+                console.log("Telemetry update failed:", response.message);
+            }
+        },
+
+        error: function (xhr, status, error) {
+            console.log("Status Code:", xhr.status);
+            console.log("AJAX Status:", status);
+            console.log("Error:", error);
+            console.log("Response:", xhr.responseText);
+        },
+
+        complete: function () {
+            $refreshBtn.prop('disabled', false).text('Refresh Telemetry');
+            const u = JSON.parse(sessionStorage.getItem('user') || '[]');
+            const g = JSON.parse(sessionStorage.getItem('group') || '[]');
+            groupNameText.text(g[0].groupName)
+            userNameText.text(u[0].username)
+        }
+    });
+});
+
 
 let languageChartInstance = null;
 let commitGrowthChartInstance = null;
