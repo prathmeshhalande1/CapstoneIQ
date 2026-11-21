@@ -7,7 +7,7 @@ from django.core.mail import send_mail
 from django.db.models import Q
 from django.db import IntegrityError
 import random,json
-
+import os
 # mycreated models & services
 from .models import projectGroup, userProfile,Project ,GroupMembership
 
@@ -35,7 +35,7 @@ def signupView(request):
             'otp': otpCode
         }
 
-        sender_email = getattr(settings, 'EMAIL_HOST_USER', 'from@capstoneiq.com')
+        sender_email = os.getenv('EMAIL_HOST_USER', '')
         send_mail(
             'Your CapstoneIQ OTP Verification Code',
             f'Your verification code is: {otpCode}',
@@ -213,7 +213,7 @@ def forgot_password_view(request):
             send_mail(
                 subject='Your CapstoneIQ Password Reset OTP',
                 message=f'Your OTP code is {otp}. It is valid for 10 minutes.',
-                from_email=settings.DEFAULT_FROM_EMAIL,
+                from_email=os.getenv('EMAIL_HOST_USER', ''),
                 recipient_list=[email],
             )
             messages.success(request, 'OTP has been sent to your email.')

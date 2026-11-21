@@ -315,6 +315,100 @@ function getCookie(name) {
     return cookieValue;
 }
 
+
+let activeGroupId = null;
+let activeUserId = null;
+
+// Track active member/group when a member card is clicked
+$(document).on('click', '.member-item-card', function () {
+    activeGroupId = $(this).data('group-id');
+    activeUserId = $(this).data('user-id');
+});
+
+function getCurrentGroupAndUserId() {
+    const groupId =
+        activeGroupId ||
+        $('#selectedProjectId').val() ||
+        $('.member-item-card.active').data('group-id') ||
+        '';
+
+    const userId =
+        activeUserId ||
+        $('#selectedUserId').val() ||
+        $('.member-item-card.active').data('user-id') ||
+        '';
+
+    return { groupId, userId };
+}
+
+function downloadTelemetryPdf(customGroupId = null, customUserId = null) {
+    const current = getCurrentGroupAndUserId();
+    const groupId = customGroupId || current.groupId;
+    const userId = customUserId || current.userId;
+
+    if (!groupId || !userId) {
+        console.warn('Missing groupId or userId for PDF download.');
+        alert('Please select a group and member first.');
+        return;
+    }
+
+    const $btn = $('#downloadPdfBtn');
+    const originalText = $btn.length ? $btn.text() : 'Download PDF';
+    if ($btn.length) {
+        $btn.prop('disabled', true).text('Generating PDF...');
+    }
+
+    const url = `/Telemetry/download-pdf/?user_id=${encodeURIComponent(userId)}&group_id=${encodeURIComponent(groupId)}`;
+
+    fetch(url, {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+        .then(async (response) => {
+            if (!response.ok) {
+                const errText = await response.text();
+                throw new Error(errText || `HTTP ${response.status}`);
+            }
+
+            // Try getting filename from Content-Disposition header if provided
+            const disposition = response.headers.get('Content-Disposition') || '';
+            const match = disposition.match(/filename="?([^"]+)"?/i);
+            const filename = match
+                ? match[1]
+                : `analytics_report_user_${userId}_group_${groupId}.pdf`;
+
+            const blob = await response.blob();
+            return { blob, filename };
+        })
+        .then(({ blob, filename }) => {
+            const blobUrl = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = blobUrl;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            window.URL.revokeObjectURL(blobUrl);
+            console.log('PDF downloaded:', filename);
+        })
+        .catch((error) => {
+            console.error('PDF download error:', error);
+            alert('Failed to download PDF report.');
+        })
+        .finally(() => {
+            if ($btn.length) {
+                $btn.prop('disabled', false).text(originalText);
+            }
+        });
+}
+
+// Bind to your HTML download button
+$(document).on('click', '#downloadPdfBtn', function () {
+    downloadTelemetryPdf();
+});
 $('#refreshTelemetryBtn').on('click', function () {
     refreshTelemetry();
 });
+
