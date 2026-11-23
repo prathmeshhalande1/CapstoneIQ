@@ -71,7 +71,13 @@ class GroupMembership(models.Model):
     return f"{self.User.user.username} in {self.group.groupName}"
 
 class groupchat(models.Model):
-   groupid = models.ForeignKey(projectGroup,on_delete=models.CASCADE,null=False,blank=False)
-   sendBy = models.ForeignKey(User,on_delete=models.DO_NOTHING,null=False,blank=False)
-   chat = models.CharField()
+   groupid = models.ForeignKey(projectGroup,on_delete=models.CASCADE,null=False,blank=False,related_name="messages")
+   sendBy = models.ForeignKey(User,on_delete=models.SET_NULL,null=True,blank=True,related_name="sent_messages")
+   chat = models.TextField()
    chatAt = models.DateTimeField(auto_now_add=True)
+   class Meta:
+        ordering = ["chatAt"]
+
+   def __str__(self):
+        sender_name = self.sender.username if self.sender else "Unknown"
+        return f"[{self.group.groupCode}] {sender_name}: {self.message[:30]}"

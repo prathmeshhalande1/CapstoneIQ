@@ -1,0 +1,13 @@
+{% if msg.sendBy_id == request.user.id %}
+  <div class="messageBubble outgoing align-self-end">
+    <div class="small fw-bold text-primary mb-1">{{ msg.sendBy.get_full_name|default:msg.sendBy.username }}</div>
+    <div class="text-white">{{ msg.chat }}</div>
+    <div class="messageTime text-end mt-1">{{ msg.chatAt|time:"h:i A" }} ✓</div>
+  </div>
+{% else %}
+  <div class="messageBubble incoming align-self-start">
+    <div class="small fw-bold text-warning mb-1">{{ msg.sendBy.get_full_name|default:msg.sendBy.username }}</div>
+    <div class="text-light">{{ msg.chat }}</div>
+    <div class="messageTime text-end mt-1">{{ msg.chatAt|time:"h:i A" }}</div>
+  </div>
+{% endif %}

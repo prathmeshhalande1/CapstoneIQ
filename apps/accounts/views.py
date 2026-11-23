@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
+from django.views.decorators.http import require_GET, require_POST
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -7,9 +8,10 @@ from django.core.mail import send_mail
 from django.db.models import Q
 from django.db import IntegrityError
 import random,json
+from django.http import JsonResponse,HttpResponse
 import os
 # mycreated models & services
-from .models import projectGroup, userProfile,Project ,GroupMembership
+from .models import projectGroup, userProfile,Project ,GroupMembership,groupchat
 
 def signupView(request):
     if request.method == 'POST':
@@ -335,3 +337,44 @@ def editProject(request, project_id):
 def CreateProjectView(req):
     return render(req, 'accounts/createProject.html')
 
+def _is_group_member(user, group):
+    profile, _ = userProfile.objects.get_or_create(user=user)
+    return (
+        group.createdBy_id == user.id
+        or group.group_members.filter(User=profile).exists()
+    )
+
+@login_required
+@require_GET
+def get_group_messages(req,group_id):
+    group = get_object_or_404(projectGroup, pk=group_id)
+    if not _is_group_member(req.user, group):
+        return HttpResponse("Not authorized for this group.", status=403)
+
+    messages_qs = groupchat.objects.filter(groupid=group).select_related("sendBy")
+    return render(req, "components/chatMessagesList.html", {"messages": messages_qs})
+
+@login_required
+def send_group_message(req):
+    try:
+        data = json.loads(req.body) if req.content_type == "application/json" else req.POST
+    except json.JSONDecodeError:
+        return HttpResponse("Invalid payload.", status=400)
+
+    group_id = data.get("group_id")
+    chat_text = (data.get("chat") or "").strip()
+
+    if not group_id or not chat_text:
+        return HttpResponse(status=204)
+
+    group = get_object_or_404(projectGroup, pk=group_id)
+    if not _is_group_member(req.user, group):
+        return HttpResponse("Not authorized for this group.", status=403)
+
+    msg = groupchat.objects.create(
+        groupid=group,
+        sendBy=req.user,
+        chat=chat_text,
+    )
+
+    return render(req, "components/chatMessageBubble.html", {"msg": msg}, status=201)

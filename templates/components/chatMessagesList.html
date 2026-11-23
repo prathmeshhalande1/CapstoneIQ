@@ -1,0 +1,5 @@
+{% for msg in messages %}
+  {% include "components/chatMessageBubble.html" with msg=msg %}
+{% empty %}
+  <div class="text-center text-secondary small my-4">No messages yet. Start the conversation!</div>
+{% endfor %}

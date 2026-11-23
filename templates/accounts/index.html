@@ -86,6 +86,13 @@
     <script src="{% static 'js/analsis.js' %}"></script>
     <script src="{% static 'js/analsisBackendCall.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+    <script>
+        document.body.addEventListener("htmx:configRequest", (event) => {
+        const match = document.cookie.match(/(?:^|;\s*)csrftoken=([^;]+)/);
+        if (match) event.detail.headers["X-CSRFToken"] = match[1];
+        });
+</script>
 </body>
 
 </html>

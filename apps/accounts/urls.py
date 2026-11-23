@@ -15,4 +15,6 @@ urlpatterns = [
     path('createProject/', views.createProjectView, name='createProject'), 
     path('deleteProject/<int:project_id>/', views.deleteProject, name='deleteProject'),
     path('editProject/<int:project_id>/', views.editProject, name='editProject'),
+    path("chat/groups/<int:group_id>/messages/", views.get_group_messages, name="get_group_messages"),
+    path("chat/messages/send/", views.send_group_message, name="send_group_message"),
 ]
