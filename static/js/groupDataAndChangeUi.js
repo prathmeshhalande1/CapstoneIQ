@@ -91,8 +91,11 @@ function renderGroupSidebar() {
         $groupList.append(groupCardHtml);
     });
 }
+
 let activeGroupCode = null;
+
 function selectGroupCard(groupCode, element) {
+
     $('.groupItem').removeClass('active');
     $(element).addClass('active');
 
@@ -100,6 +103,7 @@ function selectGroupCard(groupCode, element) {
 
     const scriptTag = document.getElementById('allGroupsData');
     if (!scriptTag) return;
+
     const groups = JSON.parse(scriptTag.textContent);
 
     const selectedGroup = groups.find(g => g.groupCode === groupCode);
@@ -110,7 +114,22 @@ function selectGroupCard(groupCode, element) {
         $('#activeGroupBadge').text(selectedGroup.category_badge);
         $('#activeGroupCode').text(selectedGroup.groupCode);
         $('#activeGroupCount').text(selectedGroup.participant_count);
+        $('#activeGroupAvatar').text(selectedGroup.groupName.charAt(0).toUpperCase());
+
+        $('#activeGroupIdInput').val(selectedGroup.id);
         sessionStorage.setItem('group', JSON.stringify(selectedGroup));
+
+        htmx.ajax(
+        'GET',
+        `/accounts/chat/groups/${selectedGroup.id}/messages/`,
+        {
+            target: '#chatMessageContainer',
+            swap: 'innerHTML'
+        }
+    );
+
+    console.log('Selected group:', selectedGroup.groupName);
+    console.log('Selected group ID:', selectedGroup.id);
     }
 }
 
@@ -121,4 +140,9 @@ function goToGroupAnalysis() {
 }
 $(document).ready(function () {
     renderGroupSidebar();
+    const firstGroup = $('#groupList .groupItem').first();
+    if (firstGroup.length) {
+        const code = firstGroup.attr('data-code');
+        selectGroupCard(code, firstGroup[0]);
+    }
 });

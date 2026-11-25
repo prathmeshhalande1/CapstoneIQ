@@ -79,5 +79,5 @@ class groupchat(models.Model):
         ordering = ["chatAt"]
 
    def __str__(self):
-        sender_name = self.sender.username if self.sender else "Unknown"
-        return f"[{self.group.groupCode}] {sender_name}: {self.message[:30]}"
+        sender_name = self.sendBy.username if self.sendBy else "Unknown"
+        return f"[{self.groupid.groupCode}] {sender_name}: {self.chat[:30]}"

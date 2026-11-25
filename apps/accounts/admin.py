@@ -1,7 +1,8 @@
 from django.contrib import admin
-from .models import projectGroup , userProfile, Project
+from .models import projectGroup , userProfile, Project,groupchat
 # Register your models here.
 
 admin.site.register(projectGroup)
 admin.site.register(userProfile)
 admin.site.register(Project)
+admin.site.register(groupchat)

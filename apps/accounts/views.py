@@ -338,15 +338,20 @@ def CreateProjectView(req):
     return render(req, 'accounts/createProject.html')
 
 def _is_group_member(user, group):
-    profile, _ = userProfile.objects.get_or_create(user=user)
-    return (
-        group.createdBy_id == user.id
-        or group.group_members.filter(User=profile).exists()
-    )
+    profile =  userProfile.objects.filter(user=user).first()
+
+    if group.createdBy_id == user.id:
+        return True
+
+    if not profile:
+        return False
+
+    return group.group_members.filter(User=profile).exists()
 
 @login_required
 @require_GET
 def get_group_messages(req,group_id):
+    print("padjspojsasj")
     group = get_object_or_404(projectGroup, pk=group_id)
     if not _is_group_member(req.user, group):
         return HttpResponse("Not authorized for this group.", status=403)
@@ -356,18 +361,20 @@ def get_group_messages(req,group_id):
 
 @login_required
 def send_group_message(req):
-    try:
-        data = json.loads(req.body) if req.content_type == "application/json" else req.POST
-    except json.JSONDecodeError:
-        return HttpResponse("Invalid payload.", status=400)
 
-    group_id = data.get("group_id")
-    chat_text = (data.get("chat") or "").strip()
+    print("inside of send_group_message")
 
-    if not group_id or not chat_text:
-        return HttpResponse(status=204)
+    group_id = req.POST.get("group_id")
+    chat_text = req.POST.get("chat", "").strip()
+
+    if not group_id:
+        return HttpResponse("Group ID is required.", status=400)
+
+    if not chat_text:
+        return HttpResponse("Message cannot be empty.", status=400)
 
     group = get_object_or_404(projectGroup, pk=group_id)
+    
     if not _is_group_member(req.user, group):
         return HttpResponse("Not authorized for this group.", status=403)
 

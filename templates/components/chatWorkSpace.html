@@ -80,39 +80,28 @@
 
         <!-- Middle Scrollable Message Feed -->
         <div class="chatMessages p-4 overflow-auto flex-grow-1 d-flex flex-column gap-3" id="chatMessageContainer">
-            <!-- Date Divider -->
-            <div class="text-center my-2">
-                <span class="badge glass text-secondary fw-normal px-3 py-1">Today</span>
-            </div>
-
-            <div class="chatMessages p-4 overflow-auto flex-grow-1 d-flex flex-column gap-3" id="chatMessageContainer"
-                hx-get="/accounts/chat/groups/{{ user_groups.0.id }}/messages/" hx-trigger="load" hx-swap="innerHTML">
-            </div>
-
-            <div class="chatInputBar p-3 border-top border-secondary border-opacity-25">
-                <form id="chatMessageForm" class="d-flex align-items-center gap-2 m-0"
-                    hx-post="/accounts/chat/messages/send/" hx-target="#chatMessageContainer" hx-swap="beforeend">
-                    <input type="hidden" name="group_id" id="activeGroupIdInput">
-                    <button type="button" class="btn glass-btn rounded-circle px-2 py-1" title="Attach File"> ✅</button>
-                    <input type="text" name="chat" id="chatInputText" class="form-control glass-input rounded-pill px-3"
-                        placeholder="Type a message..." autocomplete="off">
-                    <button type="submit"
-                        class="btn glass-btn-primary rounded-circle d-flex align-items-center justify-content-center"
-                        style="width: 38px; height: 38px;" title="Send Message">
-                        ➤
-                    </button>
-                </form>
-            </div>
-            {% else %}
-            <div class="d-flex flex-column align-items-center justify-content-center flex-grow-1 text-center p-4">
-                <div class="display-4 mb-3">💬</div>
-                <h5 class="fw-bold text-white">CapstoneIQ Web Workspace</h5>
-                <p class="text-secondary" style="max-width: 380px;">
-                    Select a group from the sidebar or create a new project group to collaborate with your team and
-                    track
-                    repository analytics.
-                </p>
-            </div>
-            {% endif %}
         </div>
+        <div class="chatInputBar p-3 border-top border-secondary border-opacity-25">
+
+            <form id="chatMessageForm" hx-post="/accounts/chat/messages/send/" hx-target="#chatMessageContainer" hx-swap="beforeend">
+
+            {% csrf_token %}
+                <input type="hidden" name="group_id" id="activeGroupIdInput">
+                <input type="text" name="chat" id="chatInputText" class="form-control" placeholder="Type a message..." autocomplete="off" required>
+                <button type="submit">Send</button>
+            </form>
+        </div>
+
+        {% else %}
+        <div class="d-flex flex-column align-items-center justify-content-center flex-grow-1 text-center p-4">
+            <div class="display-4 mb-3">💬</div>
+            <h5 class="fw-bold text-white">CapstoneIQ Web Workspace</h5>
+            <p class="text-secondary" style="max-width: 380px;">
+                Select a group from the sidebar or create a new project group to collaborate with your team and
+                track
+                repository analytics.
+            </p>
+        </div>
+        {% endif %}
     </div>
+</div>
